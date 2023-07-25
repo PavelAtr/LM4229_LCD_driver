@@ -20,23 +20,23 @@ typedef struct {
 typedef struct {
 	unsigned char flags;
 	unsigned int x;
-	unsigned char y;
+	unsigned int y;
 	unsigned char color;
 	} dot;
 
 typedef struct {
 	unsigned char flags;
 	unsigned int x;
-	unsigned char y;
-	short dx;
-	short dy;
+	unsigned int y;
+	int dx;
+	int dy;
 	unsigned char color;
 	} line;
 
 typedef struct {
 	unsigned char flags;
 	unsigned int x;
-	unsigned char y;
+	unsigned int y;
 	unsigned char dx;
 	unsigned char dy;
 	unsigned char color;
@@ -46,23 +46,23 @@ typedef struct {
 typedef struct {
 	unsigned char flags;
 	unsigned int x;
-	unsigned char y;
+	unsigned int y;
 	unsigned char r;
 	unsigned char color;
 	unsigned char fillcolor;
 	} circle;	
 
-dot* set_dot(unsigned int x, unsigned char y, unsigned char color, dot* shape);
-line* set_line(unsigned int x, unsigned char y, short dx, short dy, char color, line* shape);
-rect* set_rect(unsigned int x, unsigned char y, unsigned char dx, unsigned char dy, unsigned char color, unsigned char fillcolor, rect* shape);
-circle* set_circle(unsigned int x, unsigned char y, unsigned char r, unsigned char color, unsigned char fillcolor, circle* shape);
+dot* set_dot(unsigned int x, unsigned int y, unsigned char color, dot* shape);
+line* set_line(unsigned int x, unsigned int y, int dx, int dy, char color, line* shape);
+rect* set_rect(unsigned int x, unsigned int y, unsigned char dx, unsigned char dy, unsigned char color, unsigned char fillcolor, rect* shape);
+circle* set_circle(unsigned int x, unsigned int y, unsigned char r, unsigned char color, unsigned char fillcolor, circle* shape);
 
-unsigned char calc_dot(unsigned int x, unsigned char y, shape* shape);
-unsigned char calc_line(unsigned int x, unsigned char y, shape* shape);
-unsigned char calc_rect(unsigned int x, unsigned char y, shape* shape);
-unsigned char calc_circle(unsigned int x, unsigned char y, shape* shape);
+unsigned char calc_dot(unsigned int x, unsigned int y, shape* shape);
+unsigned char calc_line(unsigned int x, unsigned int y, shape* shape);
+unsigned char calc_rect(unsigned int x, unsigned int y, shape* shape);
+unsigned char calc_circle(unsigned int x, unsigned int y, shape* shape);
 
 typedef void (*draw_point_function)(char color);
-unsigned char point_color(unsigned int x, unsigned char y, shape** shapes, unsigned char shapes_count);
+unsigned char point_color(unsigned int x, unsigned int y, shape** shapes, unsigned char shapes_count);
 
 #endif

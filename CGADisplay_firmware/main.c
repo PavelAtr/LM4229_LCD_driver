@@ -19,7 +19,7 @@ void text(void)
 void draw(shape** shapes, unsigned char shapes_count)
 {
 	dpy_set_address_pointer(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
-	for (unsigned char y = 0; y < DISPLAY_HEIGHT; y++)
+	for (unsigned int y = 0; y < DISPLAY_HEIGHT; y++)
 		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
 		{
 			PORTD = dpy_point(point_color(x, y, shapes, shapes_count));

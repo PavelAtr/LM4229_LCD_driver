@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-dot* set_dot(unsigned int x, unsigned char y, unsigned char color, dot* shape)
+dot* set_dot(unsigned int x, unsigned int y, unsigned char color, dot* shape)
 {
 	shape->flags = DOT;
 	shape->x = x;
@@ -12,7 +12,7 @@ dot* set_dot(unsigned int x, unsigned char y, unsigned char color, dot* shape)
 	return shape;
 }
 
-line* set_line(unsigned int x, unsigned char y, short dx, short dy, char color, line* shape)
+line* set_line(unsigned int x, unsigned int y, int dx, int dy, char color, line* shape)
 {
 	shape->flags = LINE;
 	shape->x = x;
@@ -24,7 +24,7 @@ line* set_line(unsigned int x, unsigned char y, short dx, short dy, char color, 
 }
 
 
-rect* set_rect(unsigned int x, unsigned char y, unsigned char dx, unsigned char dy, unsigned char color, unsigned char fillcolor, rect* shape)
+rect* set_rect(unsigned int x, unsigned int y, unsigned char dx, unsigned char dy, unsigned char color, unsigned char fillcolor, rect* shape)
 {
 	shape->flags = RECTANGLE;
 	shape->x = x;
@@ -36,7 +36,7 @@ rect* set_rect(unsigned int x, unsigned char y, unsigned char dx, unsigned char 
 	return shape;
 }
 
-circle* set_circle(unsigned int x, unsigned char y, unsigned char r, unsigned char color, unsigned char fillcolor, circle* shape)
+circle* set_circle(unsigned int x, unsigned int y, unsigned char r, unsigned char color, unsigned char fillcolor, circle* shape)
 {
 	shape->flags = CIRCLE;
 	shape->x = x;
@@ -48,17 +48,17 @@ circle* set_circle(unsigned int x, unsigned char y, unsigned char r, unsigned ch
 }
 
 
-unsigned char calc_dot(unsigned int x, unsigned char y, shape* shape)
+unsigned char calc_dot(unsigned int x, unsigned int y, shape* shape)
 {
 	if (x == ((dot*)shape)->x && y == ((dot*)shape)->y)
 		return ((dot*)shape)->color;
 	return TRANSPARENT_COLOR;
 }
 
-unsigned char calc_line(unsigned int x, unsigned char y, shape* shape)
+unsigned char calc_line(unsigned int x, unsigned int y, shape* shape)
 {
 	int xx = x - ((line*)shape)->x;
-	short yy = y - ((line*)shape)->y;
+	int yy = y - ((line*)shape)->y;
 	
 	if (xx <= 0 && xx >= ((line*)shape)->dx)
 		return TRANSPARENT_COLOR;
@@ -76,12 +76,11 @@ unsigned char calc_line(unsigned int x, unsigned char y, shape* shape)
 	return TRANSPARENT_COLOR;
 }
 
-unsigned char calc_rect(unsigned int x, unsigned char y, shape* shape)
+unsigned char calc_rect(unsigned int x, unsigned int y, shape* shape)
 {
 	unsigned char color = TRANSPARENT_COLOR;
-
-	int xx = x - ((line*)shape)->x;
-	short yy = y - ((line*)shape)->y;
+    int xx = x - ((line*)shape)->x;
+	int yy = y - ((line*)shape)->y;
 	
 	if (xx >= 0 &&
 		xx <= ((rect*)shape)->dx &&
@@ -100,7 +99,7 @@ unsigned char calc_rect(unsigned int x, unsigned char y, shape* shape)
 	return color;
 }
 
-unsigned char calc_circle(unsigned int x, unsigned char y, shape* shape)
+unsigned char calc_circle(unsigned int x, unsigned int y, shape* shape)
 {
 	unsigned char color = TRANSPARENT_COLOR;
 	
@@ -110,7 +109,7 @@ unsigned char calc_circle(unsigned int x, unsigned char y, shape* shape)
 		y <= ((circle*)shape)->y + ((circle*)shape)->r)
 	{
 		int dx = ((circle*)shape)->x - x;
-		short dy = ((circle*)shape)->y - y;
+		int dy = ((circle*)shape)->y - y;
 		unsigned int r = sqrt(dx * dx +  dy * dy);
 		if (r <= ((circle*)shape)->r)
 			color = (((circle*)shape)->fillcolor);
@@ -123,7 +122,7 @@ unsigned char calc_circle(unsigned int x, unsigned char y, shape* shape)
 
 #define NUM_ROWS 16
 
-unsigned char point_color(unsigned int x, unsigned char y, shape** shapes, unsigned char shapes_count)
+unsigned char point_color(unsigned int x, unsigned int y, shape** shapes, unsigned char shapes_count)
 {
 	unsigned char color = TRANSPARENT_COLOR;
 	unsigned char pcolor = BACKGROUND_COLOR;
