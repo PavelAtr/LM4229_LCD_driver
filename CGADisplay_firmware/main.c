@@ -18,12 +18,18 @@ void text(void)
 
 void draw(shape** shapes, unsigned char shapes_count)
 {
+	unsigned int scene_x1 = 20;
+	unsigned int scene_x2 = 80;
+	unsigned int scene_y1 = 40;
+	unsigned int scene_y2 = 100;
 	dpy_set_address_pointer(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
 	for (unsigned int y = 0; y < DISPLAY_HEIGHT; y++)
 		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
 		{
-			PORTD = dpy_point(point_color(x, y, shapes, shapes_count));
-			
+			if (x >= scene_x1 && x <= scene_x2 && y >= scene_y1 && y <= scene_y2)
+				PORTD = dpy_point(point_color(x, y, shapes, shapes_count));
+			else
+				PORTD = dpy_point(DISPLAY_WHITE);	
 		}
 }
 
