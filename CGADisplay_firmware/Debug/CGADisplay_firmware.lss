@@ -1,0 +1,1756 @@
+
+CGADisplay_firmware.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000009da  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  00000a4e  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000046  00800060  00800060  00000a4e  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  00000a4e  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000a80  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000128  00000000  00000000  00000abc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000016d5  00000000  00000000  00000be4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000922  00000000  00000000  000022b9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000a1f  00000000  00000000  00002bdb  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000338  00000000  00000000  000035fc  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00000579  00000000  00000000  00003934  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    00000ee5  00000000  00000000  00003ead  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000158  00000000  00000000  00004d92  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	21 c0       	rjmp	.+66     	; 0x46 <__bad_interrupt>
+   4:	20 c0       	rjmp	.+64     	; 0x46 <__bad_interrupt>
+   6:	1f c0       	rjmp	.+62     	; 0x46 <__bad_interrupt>
+   8:	1e c0       	rjmp	.+60     	; 0x46 <__bad_interrupt>
+   a:	1d c0       	rjmp	.+58     	; 0x46 <__bad_interrupt>
+   c:	1c c0       	rjmp	.+56     	; 0x46 <__bad_interrupt>
+   e:	1b c0       	rjmp	.+54     	; 0x46 <__bad_interrupt>
+  10:	1a c0       	rjmp	.+52     	; 0x46 <__bad_interrupt>
+  12:	19 c0       	rjmp	.+50     	; 0x46 <__bad_interrupt>
+  14:	18 c0       	rjmp	.+48     	; 0x46 <__bad_interrupt>
+  16:	17 c0       	rjmp	.+46     	; 0x46 <__bad_interrupt>
+  18:	16 c0       	rjmp	.+44     	; 0x46 <__bad_interrupt>
+  1a:	15 c0       	rjmp	.+42     	; 0x46 <__bad_interrupt>
+  1c:	14 c0       	rjmp	.+40     	; 0x46 <__bad_interrupt>
+  1e:	13 c0       	rjmp	.+38     	; 0x46 <__bad_interrupt>
+  20:	12 c0       	rjmp	.+36     	; 0x46 <__bad_interrupt>
+  22:	11 c0       	rjmp	.+34     	; 0x46 <__bad_interrupt>
+  24:	10 c0       	rjmp	.+32     	; 0x46 <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_clear_bss>:
+  32:	20 e0       	ldi	r18, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	01 c0       	rjmp	.+2      	; 0x3c <.do_clear_bss_start>
+
+0000003a <.do_clear_bss_loop>:
+  3a:	1d 92       	st	X+, r1
+
+0000003c <.do_clear_bss_start>:
+  3c:	a6 3a       	cpi	r26, 0xA6	; 166
+  3e:	b2 07       	cpc	r27, r18
+  40:	e1 f7       	brne	.-8      	; 0x3a <.do_clear_bss_loop>
+  42:	f3 d0       	rcall	.+486    	; 0x22a <main>
+  44:	c8 c4       	rjmp	.+2448   	; 0x9d6 <_exit>
+
+00000046 <__bad_interrupt>:
+  46:	dc cf       	rjmp	.-72     	; 0x0 <__vectors>
+
+00000048 <dpy_dataport_write_mode>:
+{
+	unsigned char ret = dpy_send_param(columns);
+	ret |= dpy_send_param(0x00);
+	ret |= dpy_send_cmd(SET_GRAPHIC_AREA);
+	return ret;
+}
+  48:	18 ba       	out	0x18, r1	; 24
+  4a:	8f ef       	ldi	r24, 0xFF	; 255
+  4c:	87 bb       	out	0x17, r24	; 23
+  4e:	08 95       	ret
+
+00000050 <dpy_dataport_read_mode>:
+  50:	18 ba       	out	0x18, r1	; 24
+  52:	17 ba       	out	0x17, r1	; 23
+  54:	08 95       	ret
+
+00000056 <dpy_status_read_mode>:
+  56:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <mode>
+  5a:	82 30       	cpi	r24, 0x02	; 2
+  5c:	49 f0       	breq	.+18     	; 0x70 <dpy_status_read_mode+0x1a>
+  5e:	f8 df       	rcall	.-16     	; 0x50 <dpy_dataport_read_mode>
+  60:	85 b3       	in	r24, 0x15	; 21
+  62:	8d 7f       	andi	r24, 0xFD	; 253
+  64:	85 bb       	out	0x15, r24	; 21
+  66:	85 e0       	ldi	r24, 0x05	; 5
+  68:	85 bb       	out	0x15, r24	; 21
+  6a:	82 e0       	ldi	r24, 0x02	; 2
+  6c:	80 93 62 00 	sts	0x0062, r24	; 0x800062 <mode>
+  70:	08 95       	ret
+
+00000072 <dpy_command_write_mode>:
+  72:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <mode>
+  76:	88 23       	and	r24, r24
+  78:	41 f0       	breq	.+16     	; 0x8a <dpy_command_write_mode+0x18>
+  7a:	e6 df       	rcall	.-52     	; 0x48 <dpy_dataport_write_mode>
+  7c:	85 b3       	in	r24, 0x15	; 21
+  7e:	8b 7f       	andi	r24, 0xFB	; 251
+  80:	85 bb       	out	0x15, r24	; 21
+  82:	83 e0       	ldi	r24, 0x03	; 3
+  84:	85 bb       	out	0x15, r24	; 21
+  86:	10 92 62 00 	sts	0x0062, r1	; 0x800062 <mode>
+  8a:	08 95       	ret
+
+0000008c <dpy_data_write_mode>:
+  8c:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <mode>
+  90:	88 23       	and	r24, r24
+  92:	59 f0       	breq	.+22     	; 0xaa <dpy_data_write_mode+0x1e>
+  94:	d9 df       	rcall	.-78     	; 0x48 <dpy_dataport_write_mode>
+  96:	85 b3       	in	r24, 0x15	; 21
+  98:	8b 7f       	andi	r24, 0xFB	; 251
+  9a:	85 bb       	out	0x15, r24	; 21
+  9c:	85 b3       	in	r24, 0x15	; 21
+  9e:	8e 7f       	andi	r24, 0xFE	; 254
+  a0:	85 bb       	out	0x15, r24	; 21
+  a2:	82 e0       	ldi	r24, 0x02	; 2
+  a4:	85 bb       	out	0x15, r24	; 21
+  a6:	10 92 62 00 	sts	0x0062, r1	; 0x800062 <mode>
+  aa:	08 95       	ret
+
+000000ac <dpy_status_read>:
+  ac:	d4 df       	rcall	.-88     	; 0x56 <dpy_status_read_mode>
+  ae:	85 b3       	in	r24, 0x15	; 21
+  b0:	87 7f       	andi	r24, 0xF7	; 247
+  b2:	85 bb       	out	0x15, r24	; 21
+  b4:	88 b3       	in	r24, 0x18	; 24
+  b6:	82 bb       	out	0x12, r24	; 18
+  b8:	95 b3       	in	r25, 0x15	; 21
+  ba:	98 60       	ori	r25, 0x08	; 8
+  bc:	95 bb       	out	0x15, r25	; 21
+  be:	08 95       	ret
+
+000000c0 <dpy_send_cmd>:
+  c0:	cf 93       	push	r28
+  c2:	c8 2f       	mov	r28, r24
+  c4:	d6 df       	rcall	.-84     	; 0x72 <dpy_command_write_mode>
+  c6:	c8 bb       	out	0x18, r28	; 24
+  c8:	85 b3       	in	r24, 0x15	; 21
+  ca:	87 7f       	andi	r24, 0xF7	; 247
+  cc:	85 bb       	out	0x15, r24	; 21
+  ce:	85 b3       	in	r24, 0x15	; 21
+  d0:	88 60       	ori	r24, 0x08	; 8
+  d2:	85 bb       	out	0x15, r24	; 21
+  d4:	eb df       	rcall	.-42     	; 0xac <dpy_status_read>
+  d6:	cf 91       	pop	r28
+  d8:	08 95       	ret
+
+000000da <dpy_send_param>:
+  da:	cf 93       	push	r28
+  dc:	c8 2f       	mov	r28, r24
+  de:	d6 df       	rcall	.-84     	; 0x8c <dpy_data_write_mode>
+  e0:	c8 bb       	out	0x18, r28	; 24
+  e2:	85 b3       	in	r24, 0x15	; 21
+  e4:	87 7f       	andi	r24, 0xF7	; 247
+  e6:	85 bb       	out	0x15, r24	; 21
+  e8:	85 b3       	in	r24, 0x15	; 21
+  ea:	88 60       	ori	r24, 0x08	; 8
+  ec:	85 bb       	out	0x15, r24	; 21
+  ee:	de df       	rcall	.-68     	; 0xac <dpy_status_read>
+  f0:	cf 91       	pop	r28
+  f2:	08 95       	ret
+
+000000f4 <dpy_set_display_mode>:
+  f4:	e5 df       	rcall	.-54     	; 0xc0 <dpy_send_cmd>
+  f6:	08 95       	ret
+
+000000f8 <dpy_set_graphic_home>:
+  f8:	cf 93       	push	r28
+  fa:	df 93       	push	r29
+  fc:	d8 2f       	mov	r29, r24
+  fe:	86 2f       	mov	r24, r22
+ 100:	ec df       	rcall	.-40     	; 0xda <dpy_send_param>
+ 102:	c8 2f       	mov	r28, r24
+ 104:	8d 2f       	mov	r24, r29
+ 106:	e9 df       	rcall	.-46     	; 0xda <dpy_send_param>
+ 108:	c8 2b       	or	r28, r24
+ 10a:	82 e4       	ldi	r24, 0x42	; 66
+ 10c:	d9 df       	rcall	.-78     	; 0xc0 <dpy_send_cmd>
+ 10e:	8c 2b       	or	r24, r28
+ 110:	df 91       	pop	r29
+ 112:	cf 91       	pop	r28
+ 114:	08 95       	ret
+
+00000116 <dpy_init>:
+ 116:	15 ba       	out	0x15, r1	; 21
+ 118:	8f e0       	ldi	r24, 0x0F	; 15
+ 11a:	84 bb       	out	0x14, r24	; 20
+ 11c:	9c df       	rcall	.-200    	; 0x56 <dpy_status_read_mode>
+ 11e:	2f ef       	ldi	r18, 0xFF	; 255
+ 120:	81 ee       	ldi	r24, 0xE1	; 225
+ 122:	94 e0       	ldi	r25, 0x04	; 4
+ 124:	21 50       	subi	r18, 0x01	; 1
+ 126:	80 40       	sbci	r24, 0x00	; 0
+ 128:	90 40       	sbci	r25, 0x00	; 0
+ 12a:	e1 f7       	brne	.-8      	; 0x124 <dpy_init+0xe>
+ 12c:	00 c0       	rjmp	.+0      	; 0x12e <dpy_init+0x18>
+ 12e:	00 00       	nop
+ 130:	85 b3       	in	r24, 0x15	; 21
+ 132:	88 60       	ori	r24, 0x08	; 8
+ 134:	85 bb       	out	0x15, r24	; 21
+ 136:	8a e9       	ldi	r24, 0x9A	; 154
+ 138:	dd df       	rcall	.-70     	; 0xf4 <dpy_set_display_mode>
+ 13a:	6c e0       	ldi	r22, 0x0C	; 12
+ 13c:	80 e0       	ldi	r24, 0x00	; 0
+ 13e:	dc df       	rcall	.-72     	; 0xf8 <dpy_set_graphic_home>
+ 140:	08 95       	ret
+
+00000142 <dpy_set_address_pointer>:
+
+unsigned char dpy_set_address_pointer(unsigned char high, unsigned char low)
+{
+ 142:	cf 93       	push	r28
+ 144:	df 93       	push	r29
+ 146:	d8 2f       	mov	r29, r24
+ 148:	86 2f       	mov	r24, r22
+	unsigned char ret = dpy_send_param(low);
+ 14a:	c7 df       	rcall	.-114    	; 0xda <dpy_send_param>
+ 14c:	c8 2f       	mov	r28, r24
+	ret |= dpy_send_param(high);
+ 14e:	8d 2f       	mov	r24, r29
+ 150:	c4 df       	rcall	.-120    	; 0xda <dpy_send_param>
+ 152:	c8 2b       	or	r28, r24
+	ret |= dpy_send_cmd(SET_ADDRESS_POINTER);
+ 154:	84 e2       	ldi	r24, 0x24	; 36
+ 156:	b4 df       	rcall	.-152    	; 0xc0 <dpy_send_cmd>
+	return ret;
+}
+ 158:	8c 2b       	or	r24, r28
+ 15a:	df 91       	pop	r29
+ 15c:	cf 91       	pop	r28
+ 15e:	08 95       	ret
+
+00000160 <dpy_data_write>:
+
+unsigned char dpy_data_write(unsigned char data)
+{
+ 160:	cf 93       	push	r28
+	unsigned char ret = dpy_send_param(data);
+ 162:	bb df       	rcall	.-138    	; 0xda <dpy_send_param>
+ 164:	c8 2f       	mov	r28, r24
+	ret |= dpy_send_cmd(DATA_WRITE);
+ 166:	80 ec       	ldi	r24, 0xC0	; 192
+ 168:	ab df       	rcall	.-170    	; 0xc0 <dpy_send_cmd>
+	return ret;
+}
+ 16a:	8c 2b       	or	r24, r28
+ 16c:	cf 91       	pop	r28
+ 16e:	08 95       	ret
+
+00000170 <dpy_point>:
+unsigned char row = 0;
+unsigned char cell = 0;
+
+void dpy_point(unsigned char color)
+{
+	row |= color & (0b10000000>>cell);
+ 170:	90 91 60 00 	lds	r25, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 174:	20 e8       	ldi	r18, 0x80	; 128
+ 176:	30 e0       	ldi	r19, 0x00	; 0
+ 178:	09 2e       	mov	r0, r25
+ 17a:	02 c0       	rjmp	.+4      	; 0x180 <dpy_point+0x10>
+ 17c:	35 95       	asr	r19
+ 17e:	27 95       	ror	r18
+ 180:	0a 94       	dec	r0
+ 182:	e2 f7       	brpl	.-8      	; 0x17c <dpy_point+0xc>
+ 184:	82 23       	and	r24, r18
+ 186:	20 91 61 00 	lds	r18, 0x0061	; 0x800061 <row>
+ 18a:	82 2b       	or	r24, r18
+ 18c:	80 93 61 00 	sts	0x0061, r24	; 0x800061 <row>
+	if (cell == 7) dpy_data_write(row);
+ 190:	97 30       	cpi	r25, 0x07	; 7
+ 192:	09 f4       	brne	.+2      	; 0x196 <dpy_point+0x26>
+ 194:	e5 df       	rcall	.-54     	; 0x160 <dpy_data_write>
+	cell ++;
+ 196:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 19a:	8f 5f       	subi	r24, 0xFF	; 255
+ 19c:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <__DATA_REGION_ORIGIN__>
+	if (cell == 8)
+ 1a0:	88 30       	cpi	r24, 0x08	; 8
+ 1a2:	21 f4       	brne	.+8      	; 0x1ac <dpy_point+0x3c>
+	{
+		row = 0;
+ 1a4:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <row>
+		cell = 0;
+ 1a8:	10 92 60 00 	sts	0x0060, r1	; 0x800060 <__DATA_REGION_ORIGIN__>
+ 1ac:	08 95       	ret
+
+000001ae <dpy_clear>:
+	}
+}
+
+void dpy_clear()
+{
+ 1ae:	1f 93       	push	r17
+ 1b0:	cf 93       	push	r28
+ 1b2:	df 93       	push	r29
+	dpy_set_address_pointer(GRAPHIC_AREA & 0x00FF, GRAPHIC_AREA >> 8);
+ 1b4:	6c e0       	ldi	r22, 0x0C	; 12
+ 1b6:	80 e0       	ldi	r24, 0x00	; 0
+ 1b8:	c4 df       	rcall	.-120    	; 0x142 <dpy_set_address_pointer>
+	for (unsigned char y = 0; y < DISPLAY_HEIGHT; y++)
+ 1ba:	10 e0       	ldi	r17, 0x00	; 0
+ 1bc:	0b c0       	rjmp	.+22     	; 0x1d4 <dpy_clear+0x26>
+		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
+			dpy_point(DISPLAY_BACKGROUND);
+ 1be:	80 e0       	ldi	r24, 0x00	; 0
+ 1c0:	d7 df       	rcall	.-82     	; 0x170 <dpy_point>
+
+void dpy_clear()
+{
+	dpy_set_address_pointer(GRAPHIC_AREA & 0x00FF, GRAPHIC_AREA >> 8);
+	for (unsigned char y = 0; y < DISPLAY_HEIGHT; y++)
+		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
+ 1c2:	21 96       	adiw	r28, 0x01	; 1
+ 1c4:	02 c0       	rjmp	.+4      	; 0x1ca <dpy_clear+0x1c>
+ 1c6:	c0 e0       	ldi	r28, 0x00	; 0
+ 1c8:	d0 e0       	ldi	r29, 0x00	; 0
+ 1ca:	c0 34       	cpi	r28, 0x40	; 64
+ 1cc:	81 e0       	ldi	r24, 0x01	; 1
+ 1ce:	d8 07       	cpc	r29, r24
+ 1d0:	b0 f3       	brcs	.-20     	; 0x1be <dpy_clear+0x10>
+}
+
+void dpy_clear()
+{
+	dpy_set_address_pointer(GRAPHIC_AREA & 0x00FF, GRAPHIC_AREA >> 8);
+	for (unsigned char y = 0; y < DISPLAY_HEIGHT; y++)
+ 1d2:	1f 5f       	subi	r17, 0xFF	; 255
+ 1d4:	11 23       	and	r17, r17
+ 1d6:	bc f7       	brge	.-18     	; 0x1c6 <dpy_clear+0x18>
+		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
+			dpy_point(DISPLAY_BACKGROUND);
+}
+ 1d8:	df 91       	pop	r29
+ 1da:	cf 91       	pop	r28
+ 1dc:	1f 91       	pop	r17
+ 1de:	08 95       	ret
+
+000001e0 <draw>:
+#include <avr/io.h>
+#include "twod.h"
+#include "LM4229.h"
+
+void draw(shape** shapes, unsigned char shapes_count)
+{
+ 1e0:	ef 92       	push	r14
+ 1e2:	ff 92       	push	r15
+ 1e4:	0f 93       	push	r16
+ 1e6:	1f 93       	push	r17
+ 1e8:	cf 93       	push	r28
+ 1ea:	df 93       	push	r29
+ 1ec:	7c 01       	movw	r14, r24
+ 1ee:	06 2f       	mov	r16, r22
+	dpy_set_address_pointer(GRAPHIC_AREA & 0x00FF, GRAPHIC_AREA >> 8);
+ 1f0:	6c e0       	ldi	r22, 0x0C	; 12
+ 1f2:	80 e0       	ldi	r24, 0x00	; 0
+ 1f4:	a6 df       	rcall	.-180    	; 0x142 <dpy_set_address_pointer>
+	for (unsigned char y = 0; y < DISPLAY_HEIGHT; y++)
+ 1f6:	10 e0       	ldi	r17, 0x00	; 0
+ 1f8:	0f c0       	rjmp	.+30     	; 0x218 <__EEPROM_REGION_LENGTH__+0x18>
+		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
+				dpy_point(point_color(x, y, shapes, shapes_count));
+ 1fa:	20 2f       	mov	r18, r16
+ 1fc:	a7 01       	movw	r20, r14
+ 1fe:	61 2f       	mov	r22, r17
+ 200:	ce 01       	movw	r24, r28
+ 202:	e0 d1       	rcall	.+960    	; 0x5c4 <point_color>
+ 204:	b5 df       	rcall	.-150    	; 0x170 <dpy_point>
+
+void draw(shape** shapes, unsigned char shapes_count)
+{
+	dpy_set_address_pointer(GRAPHIC_AREA & 0x00FF, GRAPHIC_AREA >> 8);
+	for (unsigned char y = 0; y < DISPLAY_HEIGHT; y++)
+		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
+ 206:	21 96       	adiw	r28, 0x01	; 1
+ 208:	02 c0       	rjmp	.+4      	; 0x20e <__EEPROM_REGION_LENGTH__+0xe>
+ 20a:	c0 e0       	ldi	r28, 0x00	; 0
+ 20c:	d0 e0       	ldi	r29, 0x00	; 0
+ 20e:	c0 34       	cpi	r28, 0x40	; 64
+ 210:	81 e0       	ldi	r24, 0x01	; 1
+ 212:	d8 07       	cpc	r29, r24
+ 214:	90 f3       	brcs	.-28     	; 0x1fa <draw+0x1a>
+#include "LM4229.h"
+
+void draw(shape** shapes, unsigned char shapes_count)
+{
+	dpy_set_address_pointer(GRAPHIC_AREA & 0x00FF, GRAPHIC_AREA >> 8);
+	for (unsigned char y = 0; y < DISPLAY_HEIGHT; y++)
+ 216:	1f 5f       	subi	r17, 0xFF	; 255
+ 218:	11 23       	and	r17, r17
+ 21a:	bc f7       	brge	.-18     	; 0x20a <__EEPROM_REGION_LENGTH__+0xa>
+		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
+				dpy_point(point_color(x, y, shapes, shapes_count));
+}
+ 21c:	df 91       	pop	r29
+ 21e:	cf 91       	pop	r28
+ 220:	1f 91       	pop	r17
+ 222:	0f 91       	pop	r16
+ 224:	ff 90       	pop	r15
+ 226:	ef 90       	pop	r14
+ 228:	08 95       	ret
+
+0000022a <main>:
+dot dot1;
+
+
+int main(void)
+{
+	dpy_init();
+ 22a:	75 df       	rcall	.-278    	; 0x116 <dpy_init>
+    /* Replace with your application code */
+	shapes[0] = (shape*)set_rect(20, 20, 60, 60, BLACK, BLACK, &rect1);
+ 22c:	0f 2e       	mov	r0, r31
+ 22e:	f5 e9       	ldi	r31, 0x95	; 149
+ 230:	cf 2e       	mov	r12, r31
+ 232:	f0 e0       	ldi	r31, 0x00	; 0
+ 234:	df 2e       	mov	r13, r31
+ 236:	f0 2d       	mov	r31, r0
+ 238:	ee 24       	eor	r14, r14
+ 23a:	ea 94       	dec	r14
+ 23c:	0f ef       	ldi	r16, 0xFF	; 255
+ 23e:	2c e3       	ldi	r18, 0x3C	; 60
+ 240:	4c e3       	ldi	r20, 0x3C	; 60
+ 242:	64 e1       	ldi	r22, 0x14	; 20
+ 244:	84 e1       	ldi	r24, 0x14	; 20
+ 246:	90 e0       	ldi	r25, 0x00	; 0
+ 248:	6e d0       	rcall	.+220    	; 0x326 <set_rect>
+ 24a:	c8 e6       	ldi	r28, 0x68	; 104
+ 24c:	d0 e0       	ldi	r29, 0x00	; 0
+ 24e:	99 83       	std	Y+1, r25	; 0x01
+ 250:	88 83       	st	Y, r24
+	shapes[1] = (shape*)set_circle(50, 50, 30, WHITE, WHITE, &circle1);
+ 252:	0f 2e       	mov	r0, r31
+ 254:	fc e7       	ldi	r31, 0x7C	; 124
+ 256:	ef 2e       	mov	r14, r31
+ 258:	f0 e0       	ldi	r31, 0x00	; 0
+ 25a:	ff 2e       	mov	r15, r31
+ 25c:	f0 2d       	mov	r31, r0
+ 25e:	00 e0       	ldi	r16, 0x00	; 0
+ 260:	20 e0       	ldi	r18, 0x00	; 0
+ 262:	4e e1       	ldi	r20, 0x1E	; 30
+ 264:	62 e3       	ldi	r22, 0x32	; 50
+ 266:	82 e3       	ldi	r24, 0x32	; 50
+ 268:	90 e0       	ldi	r25, 0x00	; 0
+ 26a:	71 d0       	rcall	.+226    	; 0x34e <set_circle>
+ 26c:	9b 83       	std	Y+3, r25	; 0x03
+ 26e:	8a 83       	std	Y+2, r24	; 0x02
+	shapes[2] = (shape*)set_line(20, 50, 30, 30, BLACK, &line1);
+ 270:	0f 2e       	mov	r0, r31
+ 272:	f3 e8       	ldi	r31, 0x83	; 131
+ 274:	ef 2e       	mov	r14, r31
+ 276:	f0 e0       	ldi	r31, 0x00	; 0
+ 278:	ff 2e       	mov	r15, r31
+ 27a:	f0 2d       	mov	r31, r0
+ 27c:	0f ef       	ldi	r16, 0xFF	; 255
+ 27e:	2e e1       	ldi	r18, 0x1E	; 30
+ 280:	30 e0       	ldi	r19, 0x00	; 0
+ 282:	4e e1       	ldi	r20, 0x1E	; 30
+ 284:	50 e0       	ldi	r21, 0x00	; 0
+ 286:	62 e3       	ldi	r22, 0x32	; 50
+ 288:	84 e1       	ldi	r24, 0x14	; 20
+ 28a:	90 e0       	ldi	r25, 0x00	; 0
+ 28c:	39 d0       	rcall	.+114    	; 0x300 <set_line>
+ 28e:	9d 83       	std	Y+5, r25	; 0x05
+ 290:	8c 83       	std	Y+4, r24	; 0x04
+	shapes[3] = (shape*)set_line(50, 80, 30, -30, BLACK, &line2);
+ 292:	0f 2e       	mov	r0, r31
+ 294:	fd e9       	ldi	r31, 0x9D	; 157
+ 296:	ef 2e       	mov	r14, r31
+ 298:	f0 e0       	ldi	r31, 0x00	; 0
+ 29a:	ff 2e       	mov	r15, r31
+ 29c:	f0 2d       	mov	r31, r0
+ 29e:	22 ee       	ldi	r18, 0xE2	; 226
+ 2a0:	3f ef       	ldi	r19, 0xFF	; 255
+ 2a2:	4e e1       	ldi	r20, 0x1E	; 30
+ 2a4:	50 e0       	ldi	r21, 0x00	; 0
+ 2a6:	60 e5       	ldi	r22, 0x50	; 80
+ 2a8:	82 e3       	ldi	r24, 0x32	; 50
+ 2aa:	90 e0       	ldi	r25, 0x00	; 0
+ 2ac:	29 d0       	rcall	.+82     	; 0x300 <set_line>
+ 2ae:	9f 83       	std	Y+7, r25	; 0x07
+ 2b0:	8e 83       	std	Y+6, r24	; 0x06
+	shapes[4] = (shape*)set_line(20, 50, 60, 0, BLACK, &line3);
+ 2b2:	0f 2e       	mov	r0, r31
+ 2b4:	fc e8       	ldi	r31, 0x8C	; 140
+ 2b6:	ef 2e       	mov	r14, r31
+ 2b8:	f0 e0       	ldi	r31, 0x00	; 0
+ 2ba:	ff 2e       	mov	r15, r31
+ 2bc:	f0 2d       	mov	r31, r0
+ 2be:	20 e0       	ldi	r18, 0x00	; 0
+ 2c0:	30 e0       	ldi	r19, 0x00	; 0
+ 2c2:	4c e3       	ldi	r20, 0x3C	; 60
+ 2c4:	50 e0       	ldi	r21, 0x00	; 0
+ 2c6:	62 e3       	ldi	r22, 0x32	; 50
+ 2c8:	84 e1       	ldi	r24, 0x14	; 20
+ 2ca:	90 e0       	ldi	r25, 0x00	; 0
+ 2cc:	19 d0       	rcall	.+50     	; 0x300 <set_line>
+ 2ce:	99 87       	std	Y+9, r25	; 0x09
+ 2d0:	88 87       	std	Y+8, r24	; 0x08
+	shapes[5] = (shape*)set_dot(50, 40, BLACK, &dot1);
+ 2d2:	23 e6       	ldi	r18, 0x63	; 99
+ 2d4:	30 e0       	ldi	r19, 0x00	; 0
+ 2d6:	4f ef       	ldi	r20, 0xFF	; 255
+ 2d8:	68 e2       	ldi	r22, 0x28	; 40
+ 2da:	82 e3       	ldi	r24, 0x32	; 50
+ 2dc:	90 e0       	ldi	r25, 0x00	; 0
+ 2de:	08 d0       	rcall	.+16     	; 0x2f0 <set_dot>
+ 2e0:	9b 87       	std	Y+11, r25	; 0x0b
+ 2e2:	8a 87       	std	Y+10, r24	; 0x0a
+	
+    while (1)
+    {
+		dpy_clear();
+ 2e4:	64 df       	rcall	.-312    	; 0x1ae <dpy_clear>
+		draw(shapes, 6);
+ 2e6:	66 e0       	ldi	r22, 0x06	; 6
+ 2e8:	88 e6       	ldi	r24, 0x68	; 104
+ 2ea:	90 e0       	ldi	r25, 0x00	; 0
+ 2ec:	79 df       	rcall	.-270    	; 0x1e0 <draw>
+ 2ee:	fa cf       	rjmp	.-12     	; 0x2e4 <main+0xba>
+
+000002f0 <set_dot>:
+#include "twod.h"
+#include <math.h>
+#include <stdlib.h>
+
+dot* set_dot(unsigned int x, unsigned char y, unsigned char color, dot* shape)
+{
+ 2f0:	f9 01       	movw	r30, r18
+	shape->flags = DOT;
+ 2f2:	10 82       	st	Z, r1
+	shape->x = x;
+ 2f4:	92 83       	std	Z+2, r25	; 0x02
+ 2f6:	81 83       	std	Z+1, r24	; 0x01
+	shape->y = y;
+ 2f8:	63 83       	std	Z+3, r22	; 0x03
+	shape->color = color;
+ 2fa:	44 83       	std	Z+4, r20	; 0x04
+
+	return shape;
+}
+ 2fc:	c9 01       	movw	r24, r18
+ 2fe:	08 95       	ret
+
+00000300 <set_line>:
+
+line* set_line(unsigned int x, unsigned char y, short dx, short dy, char color, line* shape)
+{
+ 300:	ef 92       	push	r14
+ 302:	ff 92       	push	r15
+ 304:	0f 93       	push	r16
+ 306:	f7 01       	movw	r30, r14
+	shape->flags = LINE;
+ 308:	71 e0       	ldi	r23, 0x01	; 1
+ 30a:	70 83       	st	Z, r23
+	shape->x = x;
+ 30c:	92 83       	std	Z+2, r25	; 0x02
+ 30e:	81 83       	std	Z+1, r24	; 0x01
+	shape->y = y;
+ 310:	63 83       	std	Z+3, r22	; 0x03
+	shape->dx = dx;
+ 312:	55 83       	std	Z+5, r21	; 0x05
+ 314:	44 83       	std	Z+4, r20	; 0x04
+	shape->dy = dy;
+ 316:	37 83       	std	Z+7, r19	; 0x07
+ 318:	26 83       	std	Z+6, r18	; 0x06
+	shape->color = color;
+ 31a:	00 87       	std	Z+8, r16	; 0x08
+	return shape;
+}
+ 31c:	c7 01       	movw	r24, r14
+ 31e:	0f 91       	pop	r16
+ 320:	ff 90       	pop	r15
+ 322:	ef 90       	pop	r14
+ 324:	08 95       	ret
+
+00000326 <set_rect>:
+
+
+rect* set_rect(unsigned int x, unsigned char y, unsigned char dx, unsigned char dy, unsigned char color, unsigned char fillcolor, rect* shape)
+{
+ 326:	cf 92       	push	r12
+ 328:	df 92       	push	r13
+ 32a:	ef 92       	push	r14
+ 32c:	0f 93       	push	r16
+ 32e:	f6 01       	movw	r30, r12
+	shape->flags = RECTANGLE;
+ 330:	33 e0       	ldi	r19, 0x03	; 3
+ 332:	30 83       	st	Z, r19
+	shape->x = x;
+ 334:	92 83       	std	Z+2, r25	; 0x02
+ 336:	81 83       	std	Z+1, r24	; 0x01
+	shape->y = y;
+ 338:	63 83       	std	Z+3, r22	; 0x03
+	shape->dx = dx;
+ 33a:	44 83       	std	Z+4, r20	; 0x04
+	shape->dy = dy;
+ 33c:	25 83       	std	Z+5, r18	; 0x05
+	shape->color = color;
+ 33e:	06 83       	std	Z+6, r16	; 0x06
+	shape->fillcolor = fillcolor;
+ 340:	e7 82       	std	Z+7, r14	; 0x07
+	return shape;
+}
+ 342:	c6 01       	movw	r24, r12
+ 344:	0f 91       	pop	r16
+ 346:	ef 90       	pop	r14
+ 348:	df 90       	pop	r13
+ 34a:	cf 90       	pop	r12
+ 34c:	08 95       	ret
+
+0000034e <set_circle>:
+
+circle* set_circle(unsigned int x, unsigned char y, unsigned char r, unsigned char color, unsigned char fillcolor, circle* shape)
+{
+ 34e:	ef 92       	push	r14
+ 350:	ff 92       	push	r15
+ 352:	0f 93       	push	r16
+ 354:	f7 01       	movw	r30, r14
+	shape->flags = CIRCLE;
+ 356:	34 e0       	ldi	r19, 0x04	; 4
+ 358:	30 83       	st	Z, r19
+	shape->x = x;
+ 35a:	92 83       	std	Z+2, r25	; 0x02
+ 35c:	81 83       	std	Z+1, r24	; 0x01
+	shape->y = y;
+ 35e:	63 83       	std	Z+3, r22	; 0x03
+	shape->r = r;
+ 360:	44 83       	std	Z+4, r20	; 0x04
+	shape->color = color;
+ 362:	25 83       	std	Z+5, r18	; 0x05
+	shape->fillcolor = fillcolor;
+ 364:	06 83       	std	Z+6, r16	; 0x06
+	return shape;
+}
+ 366:	c7 01       	movw	r24, r14
+ 368:	0f 91       	pop	r16
+ 36a:	ff 90       	pop	r15
+ 36c:	ef 90       	pop	r14
+ 36e:	08 95       	ret
+
+00000370 <calc_dot>:
+
+
+unsigned char calc_dot(unsigned int x, unsigned char y, shape* shape)
+{
+	if (x == ((dot*)shape)->x && y == ((dot*)shape)->y)
+ 370:	fa 01       	movw	r30, r20
+ 372:	21 81       	ldd	r18, Z+1	; 0x01
+ 374:	32 81       	ldd	r19, Z+2	; 0x02
+ 376:	28 17       	cp	r18, r24
+ 378:	39 07       	cpc	r19, r25
+ 37a:	29 f4       	brne	.+10     	; 0x386 <calc_dot+0x16>
+ 37c:	83 81       	ldd	r24, Z+3	; 0x03
+ 37e:	86 13       	cpse	r24, r22
+ 380:	04 c0       	rjmp	.+8      	; 0x38a <calc_dot+0x1a>
+		return ((dot*)shape)->color;
+ 382:	84 81       	ldd	r24, Z+4	; 0x04
+ 384:	08 95       	ret
+	return TRANSPARENT_COLOR;
+ 386:	8f e0       	ldi	r24, 0x0F	; 15
+ 388:	08 95       	ret
+ 38a:	8f e0       	ldi	r24, 0x0F	; 15
+}
+ 38c:	08 95       	ret
+
+0000038e <calc_line>:
+
+unsigned char calc_line(unsigned int x, unsigned char y, shape* shape)
+{
+ 38e:	4f 92       	push	r4
+ 390:	5f 92       	push	r5
+ 392:	6f 92       	push	r6
+ 394:	7f 92       	push	r7
+ 396:	8f 92       	push	r8
+ 398:	9f 92       	push	r9
+ 39a:	af 92       	push	r10
+ 39c:	bf 92       	push	r11
+ 39e:	cf 92       	push	r12
+ 3a0:	df 92       	push	r13
+ 3a2:	ef 92       	push	r14
+ 3a4:	ff 92       	push	r15
+ 3a6:	0f 93       	push	r16
+ 3a8:	1f 93       	push	r17
+ 3aa:	cf 93       	push	r28
+ 3ac:	df 93       	push	r29
+ 3ae:	fa 01       	movw	r30, r20
+	int xx = x - ((line*)shape)->x;
+ 3b0:	21 81       	ldd	r18, Z+1	; 0x01
+ 3b2:	32 81       	ldd	r19, Z+2	; 0x02
+ 3b4:	6c 01       	movw	r12, r24
+ 3b6:	c2 1a       	sub	r12, r18
+ 3b8:	d3 0a       	sbc	r13, r19
+ 3ba:	76 01       	movw	r14, r12
+	short yy = y - ((line*)shape)->y;
+ 3bc:	83 81       	ldd	r24, Z+3	; 0x03
+ 3be:	c6 2f       	mov	r28, r22
+ 3c0:	d0 e0       	ldi	r29, 0x00	; 0
+ 3c2:	c8 1b       	sub	r28, r24
+ 3c4:	d1 09       	sbc	r29, r1
+	
+	if (xx <= 0 && xx >= ((line*)shape)->dx)
+ 3c6:	1c 14       	cp	r1, r12
+ 3c8:	1d 04       	cpc	r1, r13
+ 3ca:	34 f0       	brlt	.+12     	; 0x3d8 <calc_line+0x4a>
+ 3cc:	84 81       	ldd	r24, Z+4	; 0x04
+ 3ce:	95 81       	ldd	r25, Z+5	; 0x05
+ 3d0:	c8 16       	cp	r12, r24
+ 3d2:	d9 06       	cpc	r13, r25
+ 3d4:	0c f0       	brlt	.+2      	; 0x3d8 <calc_line+0x4a>
+ 3d6:	40 c0       	rjmp	.+128    	; 0x458 <__DATA_REGION_LENGTH__+0x58>
+		return TRANSPARENT_COLOR;
+		
+	if (yy < 0 && yy > ((line*)shape)->dy && ((line*)shape)->dy >= 0)
+ 3d8:	dd 23       	and	r29, r29
+ 3da:	3c f4       	brge	.+14     	; 0x3ea <calc_line+0x5c>
+ 3dc:	86 81       	ldd	r24, Z+6	; 0x06
+ 3de:	97 81       	ldd	r25, Z+7	; 0x07
+ 3e0:	8c 17       	cp	r24, r28
+ 3e2:	9d 07       	cpc	r25, r29
+ 3e4:	14 f4       	brge	.+4      	; 0x3ea <calc_line+0x5c>
+ 3e6:	99 23       	and	r25, r25
+ 3e8:	cc f5       	brge	.+114    	; 0x45c <__DATA_REGION_LENGTH__+0x5c>
+		return TRANSPARENT_COLOR;
+
+	if (yy > 0 && yy < ((line*)shape)->dy && ((line*)shape)->dy <= 0)
+ 3ea:	1c 16       	cp	r1, r28
+ 3ec:	1d 06       	cpc	r1, r29
+ 3ee:	44 f4       	brge	.+16     	; 0x400 <__DATA_REGION_LENGTH__>
+ 3f0:	86 81       	ldd	r24, Z+6	; 0x06
+ 3f2:	97 81       	ldd	r25, Z+7	; 0x07
+ 3f4:	c8 17       	cp	r28, r24
+ 3f6:	d9 07       	cpc	r29, r25
+ 3f8:	1c f4       	brge	.+6      	; 0x400 <__DATA_REGION_LENGTH__>
+ 3fa:	18 16       	cp	r1, r24
+ 3fc:	19 06       	cpc	r1, r25
+ 3fe:	84 f5       	brge	.+96     	; 0x460 <__stack+0x1>
+ 400:	8f 01       	movw	r16, r30
+		return TRANSPARENT_COLOR;
+
+	float k = (float )(((line*)shape)->dy/((line*)shape)->dx);
+ 402:	86 81       	ldd	r24, Z+6	; 0x06
+ 404:	97 81       	ldd	r25, Z+7	; 0x07
+ 406:	64 80       	ldd	r6, Z+4	; 0x04
+ 408:	75 80       	ldd	r7, Z+5	; 0x05
+ 40a:	b3 01       	movw	r22, r6
+ 40c:	bd d2       	rcall	.+1402   	; 0x988 <__divmodhi4>
+ 40e:	07 2e       	mov	r0, r23
+ 410:	00 0c       	add	r0, r0
+ 412:	88 0b       	sbc	r24, r24
+ 414:	99 0b       	sbc	r25, r25
+ 416:	4e d1       	rcall	.+668    	; 0x6b4 <__floatsisf>
+ 418:	4b 01       	movw	r8, r22
+ 41a:	5c 01       	movw	r10, r24
+	if (xx >= 0 && xx <= ((line*)shape)->dx && yy == k * xx)
+ 41c:	ff 20       	and	r15, r15
+ 41e:	14 f1       	brlt	.+68     	; 0x464 <__stack+0x5>
+ 420:	6e 14       	cp	r6, r14
+ 422:	7f 04       	cpc	r7, r15
+ 424:	0c f1       	brlt	.+66     	; 0x468 <__stack+0x9>
+ 426:	be 01       	movw	r22, r28
+ 428:	dd 0f       	add	r29, r29
+ 42a:	88 0b       	sbc	r24, r24
+ 42c:	99 0b       	sbc	r25, r25
+ 42e:	42 d1       	rcall	.+644    	; 0x6b4 <__floatsisf>
+ 430:	2b 01       	movw	r4, r22
+ 432:	3c 01       	movw	r6, r24
+ 434:	b6 01       	movw	r22, r12
+ 436:	dd 0c       	add	r13, r13
+ 438:	88 0b       	sbc	r24, r24
+ 43a:	99 0b       	sbc	r25, r25
+ 43c:	3b d1       	rcall	.+630    	; 0x6b4 <__floatsisf>
+ 43e:	a5 01       	movw	r20, r10
+ 440:	94 01       	movw	r18, r8
+ 442:	c0 d1       	rcall	.+896    	; 0x7c4 <__mulsf3>
+ 444:	9b 01       	movw	r18, r22
+ 446:	ac 01       	movw	r20, r24
+ 448:	c3 01       	movw	r24, r6
+ 44a:	b2 01       	movw	r22, r4
+ 44c:	01 d1       	rcall	.+514    	; 0x650 <__cmpsf2>
+ 44e:	81 11       	cpse	r24, r1
+ 450:	0d c0       	rjmp	.+26     	; 0x46c <__stack+0xd>
+		return ((line*)shape)->color;
+ 452:	f8 01       	movw	r30, r16
+ 454:	80 85       	ldd	r24, Z+8	; 0x08
+ 456:	0b c0       	rjmp	.+22     	; 0x46e <__stack+0xf>
+{
+	int xx = x - ((line*)shape)->x;
+	short yy = y - ((line*)shape)->y;
+	
+	if (xx <= 0 && xx >= ((line*)shape)->dx)
+		return TRANSPARENT_COLOR;
+ 458:	8f e0       	ldi	r24, 0x0F	; 15
+ 45a:	09 c0       	rjmp	.+18     	; 0x46e <__stack+0xf>
+		
+	if (yy < 0 && yy > ((line*)shape)->dy && ((line*)shape)->dy >= 0)
+		return TRANSPARENT_COLOR;
+ 45c:	8f e0       	ldi	r24, 0x0F	; 15
+ 45e:	07 c0       	rjmp	.+14     	; 0x46e <__stack+0xf>
+
+	if (yy > 0 && yy < ((line*)shape)->dy && ((line*)shape)->dy <= 0)
+		return TRANSPARENT_COLOR;
+ 460:	8f e0       	ldi	r24, 0x0F	; 15
+ 462:	05 c0       	rjmp	.+10     	; 0x46e <__stack+0xf>
+
+	float k = (float )(((line*)shape)->dy/((line*)shape)->dx);
+	if (xx >= 0 && xx <= ((line*)shape)->dx && yy == k * xx)
+		return ((line*)shape)->color;
+	
+	return TRANSPARENT_COLOR;
+ 464:	8f e0       	ldi	r24, 0x0F	; 15
+ 466:	03 c0       	rjmp	.+6      	; 0x46e <__stack+0xf>
+ 468:	8f e0       	ldi	r24, 0x0F	; 15
+ 46a:	01 c0       	rjmp	.+2      	; 0x46e <__stack+0xf>
+ 46c:	8f e0       	ldi	r24, 0x0F	; 15
+}
+ 46e:	df 91       	pop	r29
+ 470:	cf 91       	pop	r28
+ 472:	1f 91       	pop	r17
+ 474:	0f 91       	pop	r16
+ 476:	ff 90       	pop	r15
+ 478:	ef 90       	pop	r14
+ 47a:	df 90       	pop	r13
+ 47c:	cf 90       	pop	r12
+ 47e:	bf 90       	pop	r11
+ 480:	af 90       	pop	r10
+ 482:	9f 90       	pop	r9
+ 484:	8f 90       	pop	r8
+ 486:	7f 90       	pop	r7
+ 488:	6f 90       	pop	r6
+ 48a:	5f 90       	pop	r5
+ 48c:	4f 90       	pop	r4
+ 48e:	08 95       	ret
+
+00000490 <calc_rect>:
+
+unsigned char calc_rect(unsigned int x, unsigned char y, shape* shape)
+{
+ 490:	fa 01       	movw	r30, r20
+	unsigned char color = TRANSPARENT_COLOR;
+
+	int xx = x - ((line*)shape)->x;
+ 492:	21 81       	ldd	r18, Z+1	; 0x01
+ 494:	32 81       	ldd	r19, Z+2	; 0x02
+ 496:	82 1b       	sub	r24, r18
+ 498:	93 0b       	sbc	r25, r19
+ 49a:	9c 01       	movw	r18, r24
+	short yy = y - ((line*)shape)->y;
+ 49c:	83 81       	ldd	r24, Z+3	; 0x03
+ 49e:	70 e0       	ldi	r23, 0x00	; 0
+ 4a0:	68 1b       	sub	r22, r24
+ 4a2:	71 09       	sbc	r23, r1
+	
+	if (xx >= 0 &&
+ 4a4:	33 23       	and	r19, r19
+ 4a6:	34 f1       	brlt	.+76     	; 0x4f4 <calc_rect+0x64>
+		xx <= ((rect*)shape)->dx &&
+ 4a8:	44 81       	ldd	r20, Z+4	; 0x04
+ 4aa:	50 e0       	ldi	r21, 0x00	; 0
+	unsigned char color = TRANSPARENT_COLOR;
+
+	int xx = x - ((line*)shape)->x;
+	short yy = y - ((line*)shape)->y;
+	
+	if (xx >= 0 &&
+ 4ac:	42 17       	cp	r20, r18
+ 4ae:	53 07       	cpc	r21, r19
+ 4b0:	1c f1       	brlt	.+70     	; 0x4f8 <calc_rect+0x68>
+		xx <= ((rect*)shape)->dx &&
+ 4b2:	77 23       	and	r23, r23
+ 4b4:	1c f1       	brlt	.+70     	; 0x4fc <calc_rect+0x6c>
+		yy >= 0 &&
+		yy <= ((rect*)shape)->dy)
+ 4b6:	a5 81       	ldd	r26, Z+5	; 0x05
+ 4b8:	b0 e0       	ldi	r27, 0x00	; 0
+	int xx = x - ((line*)shape)->x;
+	short yy = y - ((line*)shape)->y;
+	
+	if (xx >= 0 &&
+		xx <= ((rect*)shape)->dx &&
+		yy >= 0 &&
+ 4ba:	a6 17       	cp	r26, r22
+ 4bc:	b7 07       	cpc	r27, r23
+ 4be:	04 f1       	brlt	.+64     	; 0x500 <calc_rect+0x70>
+		yy <= ((rect*)shape)->dy)
+	{
+		color = ((rect*)shape)->fillcolor;
+ 4c0:	87 81       	ldd	r24, Z+7	; 0x07
+
+		if (xx >= 0 && xx <= ((rect*)shape)->dx && (yy == 0 || yy == ((rect*)shape)->dy))
+ 4c2:	33 23       	and	r19, r19
+ 4c4:	54 f0       	brlt	.+20     	; 0x4da <calc_rect+0x4a>
+ 4c6:	42 17       	cp	r20, r18
+ 4c8:	53 07       	cpc	r21, r19
+ 4ca:	3c f0       	brlt	.+14     	; 0x4da <calc_rect+0x4a>
+ 4cc:	61 15       	cp	r22, r1
+ 4ce:	71 05       	cpc	r23, r1
+ 4d0:	19 f0       	breq	.+6      	; 0x4d8 <calc_rect+0x48>
+ 4d2:	6a 17       	cp	r22, r26
+ 4d4:	7b 07       	cpc	r23, r27
+ 4d6:	09 f4       	brne	.+2      	; 0x4da <calc_rect+0x4a>
+			color = ((rect*)shape)->color;
+ 4d8:	86 81       	ldd	r24, Z+6	; 0x06
+
+		if (yy >= 0 && yy <= ((rect*)shape)->dy && (xx == 0 || xx == ((rect*)shape)->dx))
+ 4da:	77 23       	and	r23, r23
+ 4dc:	94 f0       	brlt	.+36     	; 0x502 <calc_rect+0x72>
+ 4de:	a6 17       	cp	r26, r22
+ 4e0:	b7 07       	cpc	r27, r23
+ 4e2:	7c f0       	brlt	.+30     	; 0x502 <calc_rect+0x72>
+ 4e4:	21 15       	cp	r18, r1
+ 4e6:	31 05       	cpc	r19, r1
+ 4e8:	19 f0       	breq	.+6      	; 0x4f0 <calc_rect+0x60>
+ 4ea:	24 17       	cp	r18, r20
+ 4ec:	35 07       	cpc	r19, r21
+ 4ee:	49 f4       	brne	.+18     	; 0x502 <calc_rect+0x72>
+			color = ((rect*)shape)->color;
+ 4f0:	86 81       	ldd	r24, Z+6	; 0x06
+ 4f2:	08 95       	ret
+	return TRANSPARENT_COLOR;
+}
+
+unsigned char calc_rect(unsigned int x, unsigned char y, shape* shape)
+{
+	unsigned char color = TRANSPARENT_COLOR;
+ 4f4:	8f e0       	ldi	r24, 0x0F	; 15
+ 4f6:	08 95       	ret
+ 4f8:	8f e0       	ldi	r24, 0x0F	; 15
+ 4fa:	08 95       	ret
+ 4fc:	8f e0       	ldi	r24, 0x0F	; 15
+ 4fe:	08 95       	ret
+ 500:	8f e0       	ldi	r24, 0x0F	; 15
+		if (yy >= 0 && yy <= ((rect*)shape)->dy && (xx == 0 || xx == ((rect*)shape)->dx))
+			color = ((rect*)shape)->color;
+	}
+		
+	return color;
+}
+ 502:	08 95       	ret
+
+00000504 <calc_circle>:
+
+unsigned char calc_circle(unsigned int x, unsigned char y, shape* shape)
+{
+ 504:	cf 92       	push	r12
+ 506:	df 92       	push	r13
+ 508:	ef 92       	push	r14
+ 50a:	ff 92       	push	r15
+ 50c:	0f 93       	push	r16
+ 50e:	1f 93       	push	r17
+ 510:	cf 93       	push	r28
+ 512:	df 93       	push	r29
+ 514:	fa 01       	movw	r30, r20
+	unsigned char color = TRANSPARENT_COLOR;
+	
+	if (x >= ((circle*)shape)->x - ((circle*)shape)->r &&
+ 516:	41 81       	ldd	r20, Z+1	; 0x01
+ 518:	52 81       	ldd	r21, Z+2	; 0x02
+ 51a:	24 81       	ldd	r18, Z+4	; 0x04
+ 51c:	02 2f       	mov	r16, r18
+ 51e:	10 e0       	ldi	r17, 0x00	; 0
+ 520:	da 01       	movw	r26, r20
+ 522:	a0 1b       	sub	r26, r16
+ 524:	b1 0b       	sbc	r27, r17
+ 526:	8a 17       	cp	r24, r26
+ 528:	9b 07       	cpc	r25, r27
+ 52a:	e0 f1       	brcs	.+120    	; 0x5a4 <calc_circle+0xa0>
+	    x <= ((circle*)shape)->x + ((circle*)shape)->r &&
+ 52c:	da 01       	movw	r26, r20
+ 52e:	a0 0f       	add	r26, r16
+ 530:	b1 1f       	adc	r27, r17
+
+unsigned char calc_circle(unsigned int x, unsigned char y, shape* shape)
+{
+	unsigned char color = TRANSPARENT_COLOR;
+	
+	if (x >= ((circle*)shape)->x - ((circle*)shape)->r &&
+ 532:	a8 17       	cp	r26, r24
+ 534:	b9 07       	cpc	r27, r25
+ 536:	c0 f1       	brcs	.+112    	; 0x5a8 <calc_circle+0xa4>
+	    x <= ((circle*)shape)->x + ((circle*)shape)->r &&
+		y >= ((circle*)shape)->y - ((circle*)shape)->r &&
+ 538:	70 e0       	ldi	r23, 0x00	; 0
+ 53a:	a3 81       	ldd	r26, Z+3	; 0x03
+ 53c:	b0 e0       	ldi	r27, 0x00	; 0
+ 53e:	98 01       	movw	r18, r16
+ 540:	ed 01       	movw	r28, r26
+ 542:	c2 1b       	sub	r28, r18
+ 544:	d3 0b       	sbc	r29, r19
+unsigned char calc_circle(unsigned int x, unsigned char y, shape* shape)
+{
+	unsigned char color = TRANSPARENT_COLOR;
+	
+	if (x >= ((circle*)shape)->x - ((circle*)shape)->r &&
+	    x <= ((circle*)shape)->x + ((circle*)shape)->r &&
+ 546:	6c 17       	cp	r22, r28
+ 548:	7d 07       	cpc	r23, r29
+ 54a:	84 f1       	brlt	.+96     	; 0x5ac <calc_circle+0xa8>
+		y >= ((circle*)shape)->y - ((circle*)shape)->r &&
+		y <= ((circle*)shape)->y + ((circle*)shape)->r)
+ 54c:	2a 0f       	add	r18, r26
+ 54e:	3b 1f       	adc	r19, r27
+{
+	unsigned char color = TRANSPARENT_COLOR;
+	
+	if (x >= ((circle*)shape)->x - ((circle*)shape)->r &&
+	    x <= ((circle*)shape)->x + ((circle*)shape)->r &&
+		y >= ((circle*)shape)->y - ((circle*)shape)->r &&
+ 550:	26 17       	cp	r18, r22
+ 552:	37 07       	cpc	r19, r23
+ 554:	6c f1       	brlt	.+90     	; 0x5b0 <calc_circle+0xac>
+ 556:	ef 01       	movw	r28, r30
+		y <= ((circle*)shape)->y + ((circle*)shape)->r)
+	{
+		int dx = ((circle*)shape)->x - x;
+ 558:	48 1b       	sub	r20, r24
+ 55a:	59 0b       	sbc	r21, r25
+		short dy = ((circle*)shape)->y - y;
+ 55c:	a6 1b       	sub	r26, r22
+ 55e:	b7 0b       	sbc	r27, r23
+		unsigned int r = sqrt(dx * dx +  dy * dy);
+ 560:	44 9f       	mul	r20, r20
+ 562:	60 01       	movw	r12, r0
+ 564:	45 9f       	mul	r20, r21
+ 566:	d0 0c       	add	r13, r0
+ 568:	d0 0c       	add	r13, r0
+ 56a:	11 24       	eor	r1, r1
+ 56c:	aa 9f       	mul	r26, r26
+ 56e:	c0 01       	movw	r24, r0
+ 570:	ab 9f       	mul	r26, r27
+ 572:	90 0d       	add	r25, r0
+ 574:	90 0d       	add	r25, r0
+ 576:	11 24       	eor	r1, r1
+ 578:	c8 0e       	add	r12, r24
+ 57a:	d9 1e       	adc	r13, r25
+ 57c:	0d 2c       	mov	r0, r13
+ 57e:	00 0c       	add	r0, r0
+ 580:	ee 08       	sbc	r14, r14
+ 582:	ff 08       	sbc	r15, r15
+ 584:	c7 01       	movw	r24, r14
+ 586:	b6 01       	movw	r22, r12
+ 588:	95 d0       	rcall	.+298    	; 0x6b4 <__floatsisf>
+ 58a:	83 d1       	rcall	.+774    	; 0x892 <sqrt>
+ 58c:	65 d0       	rcall	.+202    	; 0x658 <__fixunssfsi>
+		if (r <= ((circle*)shape)->r)
+ 58e:	06 17       	cp	r16, r22
+ 590:	17 07       	cpc	r17, r23
+ 592:	10 f0       	brcs	.+4      	; 0x598 <calc_circle+0x94>
+			color = (((circle*)shape)->fillcolor);
+ 594:	8e 81       	ldd	r24, Y+6	; 0x06
+ 596:	01 c0       	rjmp	.+2      	; 0x59a <calc_circle+0x96>
+	return color;
+}
+
+unsigned char calc_circle(unsigned int x, unsigned char y, shape* shape)
+{
+	unsigned char color = TRANSPARENT_COLOR;
+ 598:	8f e0       	ldi	r24, 0x0F	; 15
+		int dx = ((circle*)shape)->x - x;
+		short dy = ((circle*)shape)->y - y;
+		unsigned int r = sqrt(dx * dx +  dy * dy);
+		if (r <= ((circle*)shape)->r)
+			color = (((circle*)shape)->fillcolor);
+		if (r == ((circle*)shape)->r)
+ 59a:	06 17       	cp	r16, r22
+ 59c:	17 07       	cpc	r17, r23
+ 59e:	49 f4       	brne	.+18     	; 0x5b2 <calc_circle+0xae>
+			color = (((circle*)shape)->color);
+ 5a0:	8d 81       	ldd	r24, Y+5	; 0x05
+ 5a2:	07 c0       	rjmp	.+14     	; 0x5b2 <calc_circle+0xae>
+	return color;
+}
+
+unsigned char calc_circle(unsigned int x, unsigned char y, shape* shape)
+{
+	unsigned char color = TRANSPARENT_COLOR;
+ 5a4:	8f e0       	ldi	r24, 0x0F	; 15
+ 5a6:	05 c0       	rjmp	.+10     	; 0x5b2 <calc_circle+0xae>
+ 5a8:	8f e0       	ldi	r24, 0x0F	; 15
+ 5aa:	03 c0       	rjmp	.+6      	; 0x5b2 <calc_circle+0xae>
+ 5ac:	8f e0       	ldi	r24, 0x0F	; 15
+ 5ae:	01 c0       	rjmp	.+2      	; 0x5b2 <calc_circle+0xae>
+ 5b0:	8f e0       	ldi	r24, 0x0F	; 15
+		if (r == ((circle*)shape)->r)
+			color = (((circle*)shape)->color);
+	}
+		
+	return color;
+}
+ 5b2:	df 91       	pop	r29
+ 5b4:	cf 91       	pop	r28
+ 5b6:	1f 91       	pop	r17
+ 5b8:	0f 91       	pop	r16
+ 5ba:	ff 90       	pop	r15
+ 5bc:	ef 90       	pop	r14
+ 5be:	df 90       	pop	r13
+ 5c0:	cf 90       	pop	r12
+ 5c2:	08 95       	ret
+
+000005c4 <point_color>:
+
+#define NUM_ROWS 16
+
+unsigned char point_color(unsigned int x, unsigned char y, shape** shapes, unsigned char shapes_count)
+{
+ 5c4:	cf 92       	push	r12
+ 5c6:	df 92       	push	r13
+ 5c8:	ef 92       	push	r14
+ 5ca:	ff 92       	push	r15
+ 5cc:	0f 93       	push	r16
+ 5ce:	1f 93       	push	r17
+ 5d0:	cf 93       	push	r28
+ 5d2:	df 93       	push	r29
+ 5d4:	ec 01       	movw	r28, r24
+ 5d6:	c6 2e       	mov	r12, r22
+ 5d8:	8a 01       	movw	r16, r20
+ 5da:	e2 2e       	mov	r14, r18
+	unsigned char color = TRANSPARENT_COLOR;
+	unsigned char pcolor = BACKGROUND_COLOR;
+	
+	for (unsigned char j = 0; j < shapes_count; j++)
+ 5dc:	f1 2c       	mov	r15, r1
+#define NUM_ROWS 16
+
+unsigned char point_color(unsigned int x, unsigned char y, shape** shapes, unsigned char shapes_count)
+{
+	unsigned char color = TRANSPARENT_COLOR;
+	unsigned char pcolor = BACKGROUND_COLOR;
+ 5de:	d1 2c       	mov	r13, r1
+	
+	for (unsigned char j = 0; j < shapes_count; j++)
+ 5e0:	2b c0       	rjmp	.+86     	; 0x638 <point_color+0x74>
+	{
+		color = TRANSPARENT_COLOR;
+		if (shapes[j] == 0) continue;
+ 5e2:	ef 2d       	mov	r30, r15
+ 5e4:	f0 e0       	ldi	r31, 0x00	; 0
+ 5e6:	ee 0f       	add	r30, r30
+ 5e8:	ff 1f       	adc	r31, r31
+ 5ea:	e0 0f       	add	r30, r16
+ 5ec:	f1 1f       	adc	r31, r17
+ 5ee:	40 81       	ld	r20, Z
+ 5f0:	51 81       	ldd	r21, Z+1	; 0x01
+ 5f2:	41 15       	cp	r20, r1
+ 5f4:	51 05       	cpc	r21, r1
+ 5f6:	f9 f0       	breq	.+62     	; 0x636 <point_color+0x72>
+		switch(shapes[j]->flags & SHAPE_MASK)
+ 5f8:	fa 01       	movw	r30, r20
+ 5fa:	80 81       	ld	r24, Z
+ 5fc:	87 70       	andi	r24, 0x07	; 7
+ 5fe:	81 30       	cpi	r24, 0x01	; 1
+ 600:	51 f0       	breq	.+20     	; 0x616 <point_color+0x52>
+ 602:	28 f0       	brcs	.+10     	; 0x60e <point_color+0x4a>
+ 604:	83 30       	cpi	r24, 0x03	; 3
+ 606:	59 f0       	breq	.+22     	; 0x61e <point_color+0x5a>
+ 608:	84 30       	cpi	r24, 0x04	; 4
+ 60a:	69 f0       	breq	.+26     	; 0x626 <point_color+0x62>
+ 60c:	10 c0       	rjmp	.+32     	; 0x62e <point_color+0x6a>
+			{
+			case DOT:
+				color = calc_dot(x, y, shapes[j]);
+ 60e:	6c 2d       	mov	r22, r12
+ 610:	ce 01       	movw	r24, r28
+ 612:	ae de       	rcall	.-676    	; 0x370 <calc_dot>
+				break;
+ 614:	0d c0       	rjmp	.+26     	; 0x630 <point_color+0x6c>
+			case LINE:
+				color = calc_line(x, y, shapes[j]);
+ 616:	6c 2d       	mov	r22, r12
+ 618:	ce 01       	movw	r24, r28
+ 61a:	b9 de       	rcall	.-654    	; 0x38e <calc_line>
+				break;
+ 61c:	09 c0       	rjmp	.+18     	; 0x630 <point_color+0x6c>
+			case RECTANGLE:
+				color = calc_rect(x, y, shapes[j]);
+ 61e:	6c 2d       	mov	r22, r12
+ 620:	ce 01       	movw	r24, r28
+ 622:	36 df       	rcall	.-404    	; 0x490 <calc_rect>
+				break;
+ 624:	05 c0       	rjmp	.+10     	; 0x630 <point_color+0x6c>
+			case CIRCLE:
+				color = calc_circle(x, y, shapes[j]);
+ 626:	6c 2d       	mov	r22, r12
+ 628:	ce 01       	movw	r24, r28
+ 62a:	6c df       	rcall	.-296    	; 0x504 <calc_circle>
+				break;
+ 62c:	01 c0       	rjmp	.+2      	; 0x630 <point_color+0x6c>
+			default:
+				color = TRANSPARENT_COLOR;
+ 62e:	8f e0       	ldi	r24, 0x0F	; 15
+				break;
+		}
+		pcolor = (color != TRANSPARENT_COLOR)? color : pcolor;
+ 630:	8f 30       	cpi	r24, 0x0F	; 15
+ 632:	09 f0       	breq	.+2      	; 0x636 <point_color+0x72>
+ 634:	d8 2e       	mov	r13, r24
+unsigned char point_color(unsigned int x, unsigned char y, shape** shapes, unsigned char shapes_count)
+{
+	unsigned char color = TRANSPARENT_COLOR;
+	unsigned char pcolor = BACKGROUND_COLOR;
+	
+	for (unsigned char j = 0; j < shapes_count; j++)
+ 636:	f3 94       	inc	r15
+ 638:	fe 14       	cp	r15, r14
+ 63a:	98 f2       	brcs	.-90     	; 0x5e2 <point_color+0x1e>
+		}
+		pcolor = (color != TRANSPARENT_COLOR)? color : pcolor;
+	}
+	
+	return pcolor;
+}
+ 63c:	8d 2d       	mov	r24, r13
+ 63e:	df 91       	pop	r29
+ 640:	cf 91       	pop	r28
+ 642:	1f 91       	pop	r17
+ 644:	0f 91       	pop	r16
+ 646:	ff 90       	pop	r15
+ 648:	ef 90       	pop	r14
+ 64a:	df 90       	pop	r13
+ 64c:	cf 90       	pop	r12
+ 64e:	08 95       	ret
+
+00000650 <__cmpsf2>:
+ 650:	6c d0       	rcall	.+216    	; 0x72a <__fp_cmp>
+ 652:	08 f4       	brcc	.+2      	; 0x656 <__cmpsf2+0x6>
+ 654:	81 e0       	ldi	r24, 0x01	; 1
+ 656:	08 95       	ret
+
+00000658 <__fixunssfsi>:
+ 658:	94 d0       	rcall	.+296    	; 0x782 <__fp_splitA>
+ 65a:	88 f0       	brcs	.+34     	; 0x67e <__fixunssfsi+0x26>
+ 65c:	9f 57       	subi	r25, 0x7F	; 127
+ 65e:	90 f0       	brcs	.+36     	; 0x684 <__fixunssfsi+0x2c>
+ 660:	b9 2f       	mov	r27, r25
+ 662:	99 27       	eor	r25, r25
+ 664:	b7 51       	subi	r27, 0x17	; 23
+ 666:	a0 f0       	brcs	.+40     	; 0x690 <__fixunssfsi+0x38>
+ 668:	d1 f0       	breq	.+52     	; 0x69e <__fixunssfsi+0x46>
+ 66a:	66 0f       	add	r22, r22
+ 66c:	77 1f       	adc	r23, r23
+ 66e:	88 1f       	adc	r24, r24
+ 670:	99 1f       	adc	r25, r25
+ 672:	1a f0       	brmi	.+6      	; 0x67a <__fixunssfsi+0x22>
+ 674:	ba 95       	dec	r27
+ 676:	c9 f7       	brne	.-14     	; 0x66a <__fixunssfsi+0x12>
+ 678:	12 c0       	rjmp	.+36     	; 0x69e <__fixunssfsi+0x46>
+ 67a:	b1 30       	cpi	r27, 0x01	; 1
+ 67c:	81 f0       	breq	.+32     	; 0x69e <__fixunssfsi+0x46>
+ 67e:	9b d0       	rcall	.+310    	; 0x7b6 <__fp_zero>
+ 680:	b1 e0       	ldi	r27, 0x01	; 1
+ 682:	08 95       	ret
+ 684:	98 c0       	rjmp	.+304    	; 0x7b6 <__fp_zero>
+ 686:	67 2f       	mov	r22, r23
+ 688:	78 2f       	mov	r23, r24
+ 68a:	88 27       	eor	r24, r24
+ 68c:	b8 5f       	subi	r27, 0xF8	; 248
+ 68e:	39 f0       	breq	.+14     	; 0x69e <__fixunssfsi+0x46>
+ 690:	b9 3f       	cpi	r27, 0xF9	; 249
+ 692:	cc f3       	brlt	.-14     	; 0x686 <__fixunssfsi+0x2e>
+ 694:	86 95       	lsr	r24
+ 696:	77 95       	ror	r23
+ 698:	67 95       	ror	r22
+ 69a:	b3 95       	inc	r27
+ 69c:	d9 f7       	brne	.-10     	; 0x694 <__fixunssfsi+0x3c>
+ 69e:	3e f4       	brtc	.+14     	; 0x6ae <__fixunssfsi+0x56>
+ 6a0:	90 95       	com	r25
+ 6a2:	80 95       	com	r24
+ 6a4:	70 95       	com	r23
+ 6a6:	61 95       	neg	r22
+ 6a8:	7f 4f       	sbci	r23, 0xFF	; 255
+ 6aa:	8f 4f       	sbci	r24, 0xFF	; 255
+ 6ac:	9f 4f       	sbci	r25, 0xFF	; 255
+ 6ae:	08 95       	ret
+
+000006b0 <__floatunsisf>:
+ 6b0:	e8 94       	clt
+ 6b2:	09 c0       	rjmp	.+18     	; 0x6c6 <__floatsisf+0x12>
+
+000006b4 <__floatsisf>:
+ 6b4:	97 fb       	bst	r25, 7
+ 6b6:	3e f4       	brtc	.+14     	; 0x6c6 <__floatsisf+0x12>
+ 6b8:	90 95       	com	r25
+ 6ba:	80 95       	com	r24
+ 6bc:	70 95       	com	r23
+ 6be:	61 95       	neg	r22
+ 6c0:	7f 4f       	sbci	r23, 0xFF	; 255
+ 6c2:	8f 4f       	sbci	r24, 0xFF	; 255
+ 6c4:	9f 4f       	sbci	r25, 0xFF	; 255
+ 6c6:	99 23       	and	r25, r25
+ 6c8:	a9 f0       	breq	.+42     	; 0x6f4 <__floatsisf+0x40>
+ 6ca:	f9 2f       	mov	r31, r25
+ 6cc:	96 e9       	ldi	r25, 0x96	; 150
+ 6ce:	bb 27       	eor	r27, r27
+ 6d0:	93 95       	inc	r25
+ 6d2:	f6 95       	lsr	r31
+ 6d4:	87 95       	ror	r24
+ 6d6:	77 95       	ror	r23
+ 6d8:	67 95       	ror	r22
+ 6da:	b7 95       	ror	r27
+ 6dc:	f1 11       	cpse	r31, r1
+ 6de:	f8 cf       	rjmp	.-16     	; 0x6d0 <__floatsisf+0x1c>
+ 6e0:	fa f4       	brpl	.+62     	; 0x720 <__floatsisf+0x6c>
+ 6e2:	bb 0f       	add	r27, r27
+ 6e4:	11 f4       	brne	.+4      	; 0x6ea <__floatsisf+0x36>
+ 6e6:	60 ff       	sbrs	r22, 0
+ 6e8:	1b c0       	rjmp	.+54     	; 0x720 <__floatsisf+0x6c>
+ 6ea:	6f 5f       	subi	r22, 0xFF	; 255
+ 6ec:	7f 4f       	sbci	r23, 0xFF	; 255
+ 6ee:	8f 4f       	sbci	r24, 0xFF	; 255
+ 6f0:	9f 4f       	sbci	r25, 0xFF	; 255
+ 6f2:	16 c0       	rjmp	.+44     	; 0x720 <__floatsisf+0x6c>
+ 6f4:	88 23       	and	r24, r24
+ 6f6:	11 f0       	breq	.+4      	; 0x6fc <__floatsisf+0x48>
+ 6f8:	96 e9       	ldi	r25, 0x96	; 150
+ 6fa:	11 c0       	rjmp	.+34     	; 0x71e <__floatsisf+0x6a>
+ 6fc:	77 23       	and	r23, r23
+ 6fe:	21 f0       	breq	.+8      	; 0x708 <__floatsisf+0x54>
+ 700:	9e e8       	ldi	r25, 0x8E	; 142
+ 702:	87 2f       	mov	r24, r23
+ 704:	76 2f       	mov	r23, r22
+ 706:	05 c0       	rjmp	.+10     	; 0x712 <__floatsisf+0x5e>
+ 708:	66 23       	and	r22, r22
+ 70a:	71 f0       	breq	.+28     	; 0x728 <__floatsisf+0x74>
+ 70c:	96 e8       	ldi	r25, 0x86	; 134
+ 70e:	86 2f       	mov	r24, r22
+ 710:	70 e0       	ldi	r23, 0x00	; 0
+ 712:	60 e0       	ldi	r22, 0x00	; 0
+ 714:	2a f0       	brmi	.+10     	; 0x720 <__floatsisf+0x6c>
+ 716:	9a 95       	dec	r25
+ 718:	66 0f       	add	r22, r22
+ 71a:	77 1f       	adc	r23, r23
+ 71c:	88 1f       	adc	r24, r24
+ 71e:	da f7       	brpl	.-10     	; 0x716 <__floatsisf+0x62>
+ 720:	88 0f       	add	r24, r24
+ 722:	96 95       	lsr	r25
+ 724:	87 95       	ror	r24
+ 726:	97 f9       	bld	r25, 7
+ 728:	08 95       	ret
+
+0000072a <__fp_cmp>:
+ 72a:	99 0f       	add	r25, r25
+ 72c:	00 08       	sbc	r0, r0
+ 72e:	55 0f       	add	r21, r21
+ 730:	aa 0b       	sbc	r26, r26
+ 732:	e0 e8       	ldi	r30, 0x80	; 128
+ 734:	fe ef       	ldi	r31, 0xFE	; 254
+ 736:	16 16       	cp	r1, r22
+ 738:	17 06       	cpc	r1, r23
+ 73a:	e8 07       	cpc	r30, r24
+ 73c:	f9 07       	cpc	r31, r25
+ 73e:	c0 f0       	brcs	.+48     	; 0x770 <__fp_cmp+0x46>
+ 740:	12 16       	cp	r1, r18
+ 742:	13 06       	cpc	r1, r19
+ 744:	e4 07       	cpc	r30, r20
+ 746:	f5 07       	cpc	r31, r21
+ 748:	98 f0       	brcs	.+38     	; 0x770 <__fp_cmp+0x46>
+ 74a:	62 1b       	sub	r22, r18
+ 74c:	73 0b       	sbc	r23, r19
+ 74e:	84 0b       	sbc	r24, r20
+ 750:	95 0b       	sbc	r25, r21
+ 752:	39 f4       	brne	.+14     	; 0x762 <__fp_cmp+0x38>
+ 754:	0a 26       	eor	r0, r26
+ 756:	61 f0       	breq	.+24     	; 0x770 <__fp_cmp+0x46>
+ 758:	23 2b       	or	r18, r19
+ 75a:	24 2b       	or	r18, r20
+ 75c:	25 2b       	or	r18, r21
+ 75e:	21 f4       	brne	.+8      	; 0x768 <__fp_cmp+0x3e>
+ 760:	08 95       	ret
+ 762:	0a 26       	eor	r0, r26
+ 764:	09 f4       	brne	.+2      	; 0x768 <__fp_cmp+0x3e>
+ 766:	a1 40       	sbci	r26, 0x01	; 1
+ 768:	a6 95       	lsr	r26
+ 76a:	8f ef       	ldi	r24, 0xFF	; 255
+ 76c:	81 1d       	adc	r24, r1
+ 76e:	81 1d       	adc	r24, r1
+ 770:	08 95       	ret
+
+00000772 <__fp_split3>:
+ 772:	57 fd       	sbrc	r21, 7
+ 774:	90 58       	subi	r25, 0x80	; 128
+ 776:	44 0f       	add	r20, r20
+ 778:	55 1f       	adc	r21, r21
+ 77a:	59 f0       	breq	.+22     	; 0x792 <__fp_splitA+0x10>
+ 77c:	5f 3f       	cpi	r21, 0xFF	; 255
+ 77e:	71 f0       	breq	.+28     	; 0x79c <__fp_splitA+0x1a>
+ 780:	47 95       	ror	r20
+
+00000782 <__fp_splitA>:
+ 782:	88 0f       	add	r24, r24
+ 784:	97 fb       	bst	r25, 7
+ 786:	99 1f       	adc	r25, r25
+ 788:	61 f0       	breq	.+24     	; 0x7a2 <__fp_splitA+0x20>
+ 78a:	9f 3f       	cpi	r25, 0xFF	; 255
+ 78c:	79 f0       	breq	.+30     	; 0x7ac <__fp_splitA+0x2a>
+ 78e:	87 95       	ror	r24
+ 790:	08 95       	ret
+ 792:	12 16       	cp	r1, r18
+ 794:	13 06       	cpc	r1, r19
+ 796:	14 06       	cpc	r1, r20
+ 798:	55 1f       	adc	r21, r21
+ 79a:	f2 cf       	rjmp	.-28     	; 0x780 <__fp_split3+0xe>
+ 79c:	46 95       	lsr	r20
+ 79e:	f1 df       	rcall	.-30     	; 0x782 <__fp_splitA>
+ 7a0:	08 c0       	rjmp	.+16     	; 0x7b2 <__fp_splitA+0x30>
+ 7a2:	16 16       	cp	r1, r22
+ 7a4:	17 06       	cpc	r1, r23
+ 7a6:	18 06       	cpc	r1, r24
+ 7a8:	99 1f       	adc	r25, r25
+ 7aa:	f1 cf       	rjmp	.-30     	; 0x78e <__fp_splitA+0xc>
+ 7ac:	86 95       	lsr	r24
+ 7ae:	71 05       	cpc	r23, r1
+ 7b0:	61 05       	cpc	r22, r1
+ 7b2:	08 94       	sec
+ 7b4:	08 95       	ret
+
+000007b6 <__fp_zero>:
+ 7b6:	e8 94       	clt
+
+000007b8 <__fp_szero>:
+ 7b8:	bb 27       	eor	r27, r27
+ 7ba:	66 27       	eor	r22, r22
+ 7bc:	77 27       	eor	r23, r23
+ 7be:	cb 01       	movw	r24, r22
+ 7c0:	97 f9       	bld	r25, 7
+ 7c2:	08 95       	ret
+
+000007c4 <__mulsf3>:
+ 7c4:	0b d0       	rcall	.+22     	; 0x7dc <__mulsf3x>
+ 7c6:	cf c0       	rjmp	.+414    	; 0x966 <__fp_round>
+ 7c8:	c0 d0       	rcall	.+384    	; 0x94a <__fp_pscA>
+ 7ca:	28 f0       	brcs	.+10     	; 0x7d6 <__mulsf3+0x12>
+ 7cc:	c5 d0       	rcall	.+394    	; 0x958 <__fp_pscB>
+ 7ce:	18 f0       	brcs	.+6      	; 0x7d6 <__mulsf3+0x12>
+ 7d0:	95 23       	and	r25, r21
+ 7d2:	09 f0       	breq	.+2      	; 0x7d6 <__mulsf3+0x12>
+ 7d4:	9c c0       	rjmp	.+312    	; 0x90e <__fp_inf>
+ 7d6:	af c0       	rjmp	.+350    	; 0x936 <__fp_nan>
+ 7d8:	11 24       	eor	r1, r1
+ 7da:	ee cf       	rjmp	.-36     	; 0x7b8 <__fp_szero>
+
+000007dc <__mulsf3x>:
+ 7dc:	ca df       	rcall	.-108    	; 0x772 <__fp_split3>
+ 7de:	a0 f3       	brcs	.-24     	; 0x7c8 <__mulsf3+0x4>
+
+000007e0 <__mulsf3_pse>:
+ 7e0:	95 9f       	mul	r25, r21
+ 7e2:	d1 f3       	breq	.-12     	; 0x7d8 <__mulsf3+0x14>
+ 7e4:	95 0f       	add	r25, r21
+ 7e6:	50 e0       	ldi	r21, 0x00	; 0
+ 7e8:	55 1f       	adc	r21, r21
+ 7ea:	62 9f       	mul	r22, r18
+ 7ec:	f0 01       	movw	r30, r0
+ 7ee:	72 9f       	mul	r23, r18
+ 7f0:	bb 27       	eor	r27, r27
+ 7f2:	f0 0d       	add	r31, r0
+ 7f4:	b1 1d       	adc	r27, r1
+ 7f6:	63 9f       	mul	r22, r19
+ 7f8:	aa 27       	eor	r26, r26
+ 7fa:	f0 0d       	add	r31, r0
+ 7fc:	b1 1d       	adc	r27, r1
+ 7fe:	aa 1f       	adc	r26, r26
+ 800:	64 9f       	mul	r22, r20
+ 802:	66 27       	eor	r22, r22
+ 804:	b0 0d       	add	r27, r0
+ 806:	a1 1d       	adc	r26, r1
+ 808:	66 1f       	adc	r22, r22
+ 80a:	82 9f       	mul	r24, r18
+ 80c:	22 27       	eor	r18, r18
+ 80e:	b0 0d       	add	r27, r0
+ 810:	a1 1d       	adc	r26, r1
+ 812:	62 1f       	adc	r22, r18
+ 814:	73 9f       	mul	r23, r19
+ 816:	b0 0d       	add	r27, r0
+ 818:	a1 1d       	adc	r26, r1
+ 81a:	62 1f       	adc	r22, r18
+ 81c:	83 9f       	mul	r24, r19
+ 81e:	a0 0d       	add	r26, r0
+ 820:	61 1d       	adc	r22, r1
+ 822:	22 1f       	adc	r18, r18
+ 824:	74 9f       	mul	r23, r20
+ 826:	33 27       	eor	r19, r19
+ 828:	a0 0d       	add	r26, r0
+ 82a:	61 1d       	adc	r22, r1
+ 82c:	23 1f       	adc	r18, r19
+ 82e:	84 9f       	mul	r24, r20
+ 830:	60 0d       	add	r22, r0
+ 832:	21 1d       	adc	r18, r1
+ 834:	82 2f       	mov	r24, r18
+ 836:	76 2f       	mov	r23, r22
+ 838:	6a 2f       	mov	r22, r26
+ 83a:	11 24       	eor	r1, r1
+ 83c:	9f 57       	subi	r25, 0x7F	; 127
+ 83e:	50 40       	sbci	r21, 0x00	; 0
+ 840:	8a f0       	brmi	.+34     	; 0x864 <__mulsf3_pse+0x84>
+ 842:	e1 f0       	breq	.+56     	; 0x87c <__mulsf3_pse+0x9c>
+ 844:	88 23       	and	r24, r24
+ 846:	4a f0       	brmi	.+18     	; 0x85a <__mulsf3_pse+0x7a>
+ 848:	ee 0f       	add	r30, r30
+ 84a:	ff 1f       	adc	r31, r31
+ 84c:	bb 1f       	adc	r27, r27
+ 84e:	66 1f       	adc	r22, r22
+ 850:	77 1f       	adc	r23, r23
+ 852:	88 1f       	adc	r24, r24
+ 854:	91 50       	subi	r25, 0x01	; 1
+ 856:	50 40       	sbci	r21, 0x00	; 0
+ 858:	a9 f7       	brne	.-22     	; 0x844 <__mulsf3_pse+0x64>
+ 85a:	9e 3f       	cpi	r25, 0xFE	; 254
+ 85c:	51 05       	cpc	r21, r1
+ 85e:	70 f0       	brcs	.+28     	; 0x87c <__mulsf3_pse+0x9c>
+ 860:	56 c0       	rjmp	.+172    	; 0x90e <__fp_inf>
+ 862:	aa cf       	rjmp	.-172    	; 0x7b8 <__fp_szero>
+ 864:	5f 3f       	cpi	r21, 0xFF	; 255
+ 866:	ec f3       	brlt	.-6      	; 0x862 <__mulsf3_pse+0x82>
+ 868:	98 3e       	cpi	r25, 0xE8	; 232
+ 86a:	dc f3       	brlt	.-10     	; 0x862 <__mulsf3_pse+0x82>
+ 86c:	86 95       	lsr	r24
+ 86e:	77 95       	ror	r23
+ 870:	67 95       	ror	r22
+ 872:	b7 95       	ror	r27
+ 874:	f7 95       	ror	r31
+ 876:	e7 95       	ror	r30
+ 878:	9f 5f       	subi	r25, 0xFF	; 255
+ 87a:	c1 f7       	brne	.-16     	; 0x86c <__mulsf3_pse+0x8c>
+ 87c:	fe 2b       	or	r31, r30
+ 87e:	88 0f       	add	r24, r24
+ 880:	91 1d       	adc	r25, r1
+ 882:	96 95       	lsr	r25
+ 884:	87 95       	ror	r24
+ 886:	97 f9       	bld	r25, 7
+ 888:	08 95       	ret
+ 88a:	11 f4       	brne	.+4      	; 0x890 <__mulsf3_pse+0xb0>
+ 88c:	0e f4       	brtc	.+2      	; 0x890 <__mulsf3_pse+0xb0>
+ 88e:	53 c0       	rjmp	.+166    	; 0x936 <__fp_nan>
+ 890:	44 c0       	rjmp	.+136    	; 0x91a <__fp_mpack>
+
+00000892 <sqrt>:
+ 892:	77 df       	rcall	.-274    	; 0x782 <__fp_splitA>
+ 894:	d0 f3       	brcs	.-12     	; 0x88a <__mulsf3_pse+0xaa>
+ 896:	99 23       	and	r25, r25
+ 898:	d9 f3       	breq	.-10     	; 0x890 <__mulsf3_pse+0xb0>
+ 89a:	ce f3       	brts	.-14     	; 0x88e <__mulsf3_pse+0xae>
+ 89c:	9f 57       	subi	r25, 0x7F	; 127
+ 89e:	55 0b       	sbc	r21, r21
+ 8a0:	87 ff       	sbrs	r24, 7
+ 8a2:	4c d0       	rcall	.+152    	; 0x93c <__fp_norm2>
+ 8a4:	00 24       	eor	r0, r0
+ 8a6:	a0 e6       	ldi	r26, 0x60	; 96
+ 8a8:	40 ea       	ldi	r20, 0xA0	; 160
+ 8aa:	90 01       	movw	r18, r0
+ 8ac:	80 58       	subi	r24, 0x80	; 128
+ 8ae:	56 95       	lsr	r21
+ 8b0:	97 95       	ror	r25
+ 8b2:	28 f4       	brcc	.+10     	; 0x8be <sqrt+0x2c>
+ 8b4:	80 5c       	subi	r24, 0xC0	; 192
+ 8b6:	66 0f       	add	r22, r22
+ 8b8:	77 1f       	adc	r23, r23
+ 8ba:	88 1f       	adc	r24, r24
+ 8bc:	20 f0       	brcs	.+8      	; 0x8c6 <sqrt+0x34>
+ 8be:	26 17       	cp	r18, r22
+ 8c0:	37 07       	cpc	r19, r23
+ 8c2:	48 07       	cpc	r20, r24
+ 8c4:	30 f4       	brcc	.+12     	; 0x8d2 <sqrt+0x40>
+ 8c6:	62 1b       	sub	r22, r18
+ 8c8:	73 0b       	sbc	r23, r19
+ 8ca:	84 0b       	sbc	r24, r20
+ 8cc:	20 29       	or	r18, r0
+ 8ce:	31 29       	or	r19, r1
+ 8d0:	4a 2b       	or	r20, r26
+ 8d2:	a6 95       	lsr	r26
+ 8d4:	17 94       	ror	r1
+ 8d6:	07 94       	ror	r0
+ 8d8:	20 25       	eor	r18, r0
+ 8da:	31 25       	eor	r19, r1
+ 8dc:	4a 27       	eor	r20, r26
+ 8de:	58 f7       	brcc	.-42     	; 0x8b6 <sqrt+0x24>
+ 8e0:	66 0f       	add	r22, r22
+ 8e2:	77 1f       	adc	r23, r23
+ 8e4:	88 1f       	adc	r24, r24
+ 8e6:	20 f0       	brcs	.+8      	; 0x8f0 <sqrt+0x5e>
+ 8e8:	26 17       	cp	r18, r22
+ 8ea:	37 07       	cpc	r19, r23
+ 8ec:	48 07       	cpc	r20, r24
+ 8ee:	30 f4       	brcc	.+12     	; 0x8fc <sqrt+0x6a>
+ 8f0:	62 0b       	sbc	r22, r18
+ 8f2:	73 0b       	sbc	r23, r19
+ 8f4:	84 0b       	sbc	r24, r20
+ 8f6:	20 0d       	add	r18, r0
+ 8f8:	31 1d       	adc	r19, r1
+ 8fa:	41 1d       	adc	r20, r1
+ 8fc:	a0 95       	com	r26
+ 8fe:	81 f7       	brne	.-32     	; 0x8e0 <sqrt+0x4e>
+ 900:	b9 01       	movw	r22, r18
+ 902:	84 2f       	mov	r24, r20
+ 904:	91 58       	subi	r25, 0x81	; 129
+ 906:	88 0f       	add	r24, r24
+ 908:	96 95       	lsr	r25
+ 90a:	87 95       	ror	r24
+ 90c:	08 95       	ret
+
+0000090e <__fp_inf>:
+ 90e:	97 f9       	bld	r25, 7
+ 910:	9f 67       	ori	r25, 0x7F	; 127
+ 912:	80 e8       	ldi	r24, 0x80	; 128
+ 914:	70 e0       	ldi	r23, 0x00	; 0
+ 916:	60 e0       	ldi	r22, 0x00	; 0
+ 918:	08 95       	ret
+
+0000091a <__fp_mpack>:
+ 91a:	9f 3f       	cpi	r25, 0xFF	; 255
+ 91c:	31 f0       	breq	.+12     	; 0x92a <__fp_mpack_finite+0xc>
+
+0000091e <__fp_mpack_finite>:
+ 91e:	91 50       	subi	r25, 0x01	; 1
+ 920:	20 f4       	brcc	.+8      	; 0x92a <__fp_mpack_finite+0xc>
+ 922:	87 95       	ror	r24
+ 924:	77 95       	ror	r23
+ 926:	67 95       	ror	r22
+ 928:	b7 95       	ror	r27
+ 92a:	88 0f       	add	r24, r24
+ 92c:	91 1d       	adc	r25, r1
+ 92e:	96 95       	lsr	r25
+ 930:	87 95       	ror	r24
+ 932:	97 f9       	bld	r25, 7
+ 934:	08 95       	ret
+
+00000936 <__fp_nan>:
+ 936:	9f ef       	ldi	r25, 0xFF	; 255
+ 938:	80 ec       	ldi	r24, 0xC0	; 192
+ 93a:	08 95       	ret
+
+0000093c <__fp_norm2>:
+ 93c:	91 50       	subi	r25, 0x01	; 1
+ 93e:	50 40       	sbci	r21, 0x00	; 0
+ 940:	66 0f       	add	r22, r22
+ 942:	77 1f       	adc	r23, r23
+ 944:	88 1f       	adc	r24, r24
+ 946:	d2 f7       	brpl	.-12     	; 0x93c <__fp_norm2>
+ 948:	08 95       	ret
+
+0000094a <__fp_pscA>:
+ 94a:	00 24       	eor	r0, r0
+ 94c:	0a 94       	dec	r0
+ 94e:	16 16       	cp	r1, r22
+ 950:	17 06       	cpc	r1, r23
+ 952:	18 06       	cpc	r1, r24
+ 954:	09 06       	cpc	r0, r25
+ 956:	08 95       	ret
+
+00000958 <__fp_pscB>:
+ 958:	00 24       	eor	r0, r0
+ 95a:	0a 94       	dec	r0
+ 95c:	12 16       	cp	r1, r18
+ 95e:	13 06       	cpc	r1, r19
+ 960:	14 06       	cpc	r1, r20
+ 962:	05 06       	cpc	r0, r21
+ 964:	08 95       	ret
+
+00000966 <__fp_round>:
+ 966:	09 2e       	mov	r0, r25
+ 968:	03 94       	inc	r0
+ 96a:	00 0c       	add	r0, r0
+ 96c:	11 f4       	brne	.+4      	; 0x972 <__fp_round+0xc>
+ 96e:	88 23       	and	r24, r24
+ 970:	52 f0       	brmi	.+20     	; 0x986 <__fp_round+0x20>
+ 972:	bb 0f       	add	r27, r27
+ 974:	40 f4       	brcc	.+16     	; 0x986 <__fp_round+0x20>
+ 976:	bf 2b       	or	r27, r31
+ 978:	11 f4       	brne	.+4      	; 0x97e <__fp_round+0x18>
+ 97a:	60 ff       	sbrs	r22, 0
+ 97c:	04 c0       	rjmp	.+8      	; 0x986 <__fp_round+0x20>
+ 97e:	6f 5f       	subi	r22, 0xFF	; 255
+ 980:	7f 4f       	sbci	r23, 0xFF	; 255
+ 982:	8f 4f       	sbci	r24, 0xFF	; 255
+ 984:	9f 4f       	sbci	r25, 0xFF	; 255
+ 986:	08 95       	ret
+
+00000988 <__divmodhi4>:
+ 988:	97 fb       	bst	r25, 7
+ 98a:	07 2e       	mov	r0, r23
+ 98c:	16 f4       	brtc	.+4      	; 0x992 <__divmodhi4+0xa>
+ 98e:	00 94       	com	r0
+ 990:	06 d0       	rcall	.+12     	; 0x99e <__divmodhi4_neg1>
+ 992:	77 fd       	sbrc	r23, 7
+ 994:	08 d0       	rcall	.+16     	; 0x9a6 <__divmodhi4_neg2>
+ 996:	0b d0       	rcall	.+22     	; 0x9ae <__udivmodhi4>
+ 998:	07 fc       	sbrc	r0, 7
+ 99a:	05 d0       	rcall	.+10     	; 0x9a6 <__divmodhi4_neg2>
+ 99c:	3e f4       	brtc	.+14     	; 0x9ac <__divmodhi4_exit>
+
+0000099e <__divmodhi4_neg1>:
+ 99e:	90 95       	com	r25
+ 9a0:	81 95       	neg	r24
+ 9a2:	9f 4f       	sbci	r25, 0xFF	; 255
+ 9a4:	08 95       	ret
+
+000009a6 <__divmodhi4_neg2>:
+ 9a6:	70 95       	com	r23
+ 9a8:	61 95       	neg	r22
+ 9aa:	7f 4f       	sbci	r23, 0xFF	; 255
+
+000009ac <__divmodhi4_exit>:
+ 9ac:	08 95       	ret
+
+000009ae <__udivmodhi4>:
+ 9ae:	aa 1b       	sub	r26, r26
+ 9b0:	bb 1b       	sub	r27, r27
+ 9b2:	51 e1       	ldi	r21, 0x11	; 17
+ 9b4:	07 c0       	rjmp	.+14     	; 0x9c4 <__udivmodhi4_ep>
+
+000009b6 <__udivmodhi4_loop>:
+ 9b6:	aa 1f       	adc	r26, r26
+ 9b8:	bb 1f       	adc	r27, r27
+ 9ba:	a6 17       	cp	r26, r22
+ 9bc:	b7 07       	cpc	r27, r23
+ 9be:	10 f0       	brcs	.+4      	; 0x9c4 <__udivmodhi4_ep>
+ 9c0:	a6 1b       	sub	r26, r22
+ 9c2:	b7 0b       	sbc	r27, r23
+
+000009c4 <__udivmodhi4_ep>:
+ 9c4:	88 1f       	adc	r24, r24
+ 9c6:	99 1f       	adc	r25, r25
+ 9c8:	5a 95       	dec	r21
+ 9ca:	a9 f7       	brne	.-22     	; 0x9b6 <__udivmodhi4_loop>
+ 9cc:	80 95       	com	r24
+ 9ce:	90 95       	com	r25
+ 9d0:	bc 01       	movw	r22, r24
+ 9d2:	cd 01       	movw	r24, r26
+ 9d4:	08 95       	ret
+
+000009d6 <_exit>:
+ 9d6:	f8 94       	cli
+
+000009d8 <__stop_program>:
+ 9d8:	ff cf       	rjmp	.-2      	; 0x9d8 <__stop_program>
