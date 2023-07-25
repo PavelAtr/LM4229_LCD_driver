@@ -1,6 +1,5 @@
 #include "twod.h"
 #include <math.h>
-#include <stdlib.h>
 
 dot* set_dot(unsigned int x, unsigned int y, unsigned char color, dot* shape)
 {
