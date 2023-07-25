@@ -48,8 +48,6 @@ void dpy_init(void)
 	dpy_status_read_mode();
 	_delay_ms(200);
 	PORTCMD |= CE;
-	dpy_set_display_mode(DISPLAY_MODE|GRAPHICS_ONLY_ON|CURSOR_ON_BLINK_OFF);
-	dpy_set_graphic_home(GRAPHIC_AREA & 0x00FF, GRAPHIC_AREA >> 8);
 }
 
 
