@@ -55,44 +55,48 @@ unsigned char calc_dot(unsigned int x, unsigned int y, shape* shape)
 	return TRANSPARENT_COLOR;
 }
 
+#include <avr/io.h>
+
 unsigned char calc_line(unsigned int x, unsigned int y, shape* shape)
 {
-	int xx = x - ((line*)shape)->x;
-	int yy = y - ((line*)shape)->y;
+	int dx = x - ((line*)shape)->x;
+	int dy = y - ((line*)shape)->y;
 	
-	if (xx <= 0 && xx >= ((line*)shape)->dx)
+	if (dx <= 0 && dx >= ((line*)shape)->dx)
 		return TRANSPARENT_COLOR;
 		
-	if (yy < 0 && yy > ((line*)shape)->dy && ((line*)shape)->dy >= 0)
+	if (dy < 0 && dy > ((line*)shape)->dy && ((line*)shape)->dy >= 0)
 		return TRANSPARENT_COLOR;
 
-	if (yy > 0 && yy < ((line*)shape)->dy && ((line*)shape)->dy <= 0)
+	if (dy > 0 && dy < ((line*)shape)->dy && ((line*)shape)->dy < 0)
 		return TRANSPARENT_COLOR;
 
-	float k = (float )(((line*)shape)->dy/((line*)shape)->dx);
-	if (xx >= 0 && xx <= ((line*)shape)->dx && yy == k * xx)
+	double k = (double)(((line*)shape)->dy/((line*)shape)->dx);
+	if (k < 0) PORTD=0xFF;
+
+	if (dx >= 0 && dx <= ((line*)shape)->dx && dy == k * dx)
 		return ((line*)shape)->color;
-	
+
 	return TRANSPARENT_COLOR;
 }
 
 unsigned char calc_rect(unsigned int x, unsigned int y, shape* shape)
 {
 	unsigned char color = TRANSPARENT_COLOR;
-    int xx = x - ((line*)shape)->x;
-	int yy = y - ((line*)shape)->y;
+    int dx = x - ((line*)shape)->x;
+	int dy = y - ((line*)shape)->y;
 	
-	if (xx >= 0 &&
-		xx <= ((rect*)shape)->dx &&
-		yy >= 0 &&
-		yy <= ((rect*)shape)->dy)
+	if (dx >= 0 &&
+		dx <= ((rect*)shape)->dx &&
+		dy >= 0 &&
+		dy <= ((rect*)shape)->dy)
 	{
 		color = ((rect*)shape)->fillcolor;
 
-		if (xx >= 0 && xx <= ((rect*)shape)->dx && (yy == 0 || yy == ((rect*)shape)->dy))
+		if (dx >= 0 && dx <= ((rect*)shape)->dx && (dy == 0 || dy == ((rect*)shape)->dy))
 			color = ((rect*)shape)->color;
 
-		if (yy >= 0 && yy <= ((rect*)shape)->dy && (xx == 0 || xx == ((rect*)shape)->dx))
+		if (dy >= 0 && dy <= ((rect*)shape)->dy && (dx == 0 || dx == ((rect*)shape)->dx))
 			color = ((rect*)shape)->color;
 	}
 		
