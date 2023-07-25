@@ -57,9 +57,18 @@
 #define CURSOR_ON_BLINK_OFF 0b10
 #define CURSOR_ON_BLINK_ON 0b11
 
+//dpy text mode
+#define TEXT_MODE 0b10000000 
+#define OR_MODE 0b000
+#define EXOR_MODE 0b001
+#define AND_MODE 0b011
+#define ATTR_MODE 0b100
+
 // commands
 #define SET_GRAPHIC_HOME 0b01000010
+#define SET_TEXT_HOME 0b01000000
 #define SET_GRAPHIC_AREA 0b01000011
+#define SET_TEXT_AREA 0b01000001
 #define DATA_WRITE 0b11000000
 #define SET_CURSOR_POINTER 0b00100001
 #define SET_OFFSET_REGISTER 0b00100010
@@ -69,10 +78,13 @@ void dpy_init(void);
 unsigned char dpy_status_read(void);
 unsigned char dpy_send_cmd(unsigned char cmd);
 unsigned char dpy_send_param(unsigned char cmd);
-unsigned char dpy_set_display_mode(unsigned char data);
+unsigned char dpy_set_mode(unsigned char mode);
 unsigned char dpy_set_graphic_home(unsigned char high, unsigned char low);
 unsigned char dpy_set_graphic_area(unsigned char columns);
+unsigned char dpy_set_text_home(unsigned char high, unsigned char low);
+unsigned char dpy_set_text_area(unsigned char columns);
 unsigned char dpy_set_address_pointer(unsigned char high, unsigned char low);
+unsigned char dpy_set_cursor_pointer(unsigned char high, unsigned char low);
 unsigned char dpy_data_write(unsigned char data);
 unsigned char dpy_point(unsigned char color);
 void dpy_clear();

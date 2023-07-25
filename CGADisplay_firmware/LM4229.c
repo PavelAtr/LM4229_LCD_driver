@@ -104,9 +104,9 @@ unsigned char dpy_status_read(void)
 	return ret;
 }
 
-unsigned char dpy_set_display_mode(unsigned char data)
+unsigned char dpy_set_mode(unsigned char mode)
 {
-	return dpy_send_cmd(data);
+	return dpy_send_cmd(mode);
 }
 
 unsigned char dpy_set_graphic_home(unsigned char high, unsigned char low)
@@ -120,8 +120,22 @@ unsigned char dpy_set_graphic_home(unsigned char high, unsigned char low)
 unsigned char dpy_set_graphic_area(unsigned char columns)
 {
 	unsigned char ret = dpy_send_param(columns);
-	ret |= dpy_send_param(0x00);
 	ret |= dpy_send_cmd(SET_GRAPHIC_AREA);
+	return ret;
+}
+
+unsigned char dpy_set_text_home(unsigned char high, unsigned char low)
+{
+	unsigned char ret = dpy_send_param(low);
+	ret |= dpy_send_param(high);
+	ret |= dpy_send_cmd(SET_TEXT_HOME);
+	return ret;
+}
+
+unsigned char dpy_set_text_area(unsigned char columns)
+{
+	unsigned char ret = dpy_send_param(columns);
+	ret |= dpy_send_cmd(SET_TEXT_AREA);
 	return ret;
 }
 
@@ -130,6 +144,14 @@ unsigned char dpy_set_address_pointer(unsigned char high, unsigned char low)
 	unsigned char ret = dpy_send_param(low);
 	ret |= dpy_send_param(high);
 	ret |= dpy_send_cmd(SET_ADDRESS_POINTER);
+	return ret;
+}
+
+unsigned char dpy_set_cursor_pointer(unsigned char high, unsigned char low)
+{
+	unsigned char ret = dpy_send_param(low);
+	ret |= dpy_send_param(high);
+	ret |= dpy_send_cmd(SET_CURSOR_POINTER);
 	return ret;
 }
 
@@ -160,7 +182,7 @@ unsigned char dpy_point(unsigned char color)
 
 void dpy_clear()
 {
-	dpy_set_address_pointer(GRAPHIC_AREA & 0x00FF, GRAPHIC_AREA >> 8);
+	dpy_set_address_pointer(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
 	for (unsigned char y = 0; y < DISPLAY_HEIGHT; y++)
 		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
 			dpy_point(DISPLAY_BACKGROUND);
