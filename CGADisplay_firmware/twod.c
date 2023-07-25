@@ -72,10 +72,10 @@ unsigned char calc_line(unsigned int x, unsigned int y, shape* shape)
 		return TRANSPARENT_COLOR;
 
 	double k = (double)(((line*)shape)->dy/((line*)shape)->dx);
-	if (k < 0) PORTD=0xFF;
 
 	if (dx >= 0 && dx <= ((line*)shape)->dx && dy == k * dx)
 		return ((line*)shape)->color;
+
 
 	return TRANSPARENT_COLOR;
 }
