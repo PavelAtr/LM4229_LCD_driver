@@ -55,8 +55,6 @@ unsigned char calc_dot(unsigned int x, unsigned int y, shape* shape)
 	return TRANSPARENT_COLOR;
 }
 
-#include <avr/io.h>
-
 unsigned char calc_line(unsigned int x, unsigned int y, shape* shape)
 {
 	int dx = x - ((line*)shape)->x;
