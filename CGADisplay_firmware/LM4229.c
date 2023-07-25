@@ -101,8 +101,7 @@ unsigned char dpy_status_read(void)
 	dpy_status_read_mode();
 	PORTCMD &= ~CE;
 	_delay_us(HARDWARE_DELAY);
-	unsigned char ret = PORTDATA;
-	PORTD = ret;
+	unsigned char ret = PINDATA;
 	PORTCMD |= CE;
 	return ret;
 }
@@ -146,16 +145,19 @@ unsigned char dpy_data_write(unsigned char data)
 unsigned char row = 0;
 unsigned char cell = 0;
 
-void dpy_point(unsigned char color)
+unsigned char dpy_point(unsigned char color)
 {
+	unsigned char ret = 0;
 	row |= color & (0b10000000>>cell);
-	if (cell == 7) dpy_data_write(row);
+	if (cell == 7) ret = dpy_data_write(row);
 	cell ++;
 	if (cell == 8)
 	{
 		row = 0;
 		cell = 0;
 	}
+	
+	return ret;
 }
 
 void dpy_clear()

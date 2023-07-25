@@ -14,7 +14,10 @@ void draw(shape** shapes, unsigned char shapes_count)
 	dpy_set_address_pointer(GRAPHIC_AREA & 0x00FF, GRAPHIC_AREA >> 8);
 	for (unsigned char y = 0; y < DISPLAY_HEIGHT; y++)
 		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
-				dpy_point(point_color(x, y, shapes, shapes_count));
+		{
+			PORTD = dpy_point(point_color(x, y, shapes, shapes_count));
+			
+		}
 }
 
 
@@ -30,6 +33,9 @@ dot dot1;
 
 int main(void)
 {
+	PORTD = (0<<BIT7)|(0<<BIT6)|(0<<BIT5)|(0<<BIT4)|(0<<BIT3)|(0<<BIT2)|(0<<BIT1)|(0<<BIT0);
+	DDRD = (1<<BIT7)|(1<<BIT6)|(1<<BIT5)|(1<<BIT4)|(1<<BIT3)|(1<<BIT2)|(1<<BIT1)|(1<<BIT0);
+
 	dpy_init();
     /* Replace with your application code */
 	shapes[0] = (shape*)set_rect(20, 20, 60, 60, BLACK, BLACK, &rect1);

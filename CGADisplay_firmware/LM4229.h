@@ -74,7 +74,7 @@ unsigned char dpy_set_graphic_home(unsigned char high, unsigned char low);
 unsigned char dpy_set_graphic_area(unsigned char columns);
 unsigned char dpy_set_address_pointer(unsigned char high, unsigned char low);
 unsigned char dpy_data_write(unsigned char data);
-void dpy_point(unsigned char color);
+unsigned char dpy_point(unsigned char color);
 void dpy_clear();
 
 #endif
