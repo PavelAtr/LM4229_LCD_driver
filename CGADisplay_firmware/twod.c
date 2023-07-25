@@ -24,7 +24,7 @@ line* set_line(unsigned int x, unsigned int y, int dx, int dy, char color, line*
 }
 
 
-rect* set_rect(unsigned int x, unsigned int y, unsigned char dx, unsigned char dy, unsigned char color, unsigned char fillcolor, rect* shape)
+rect* set_rect(unsigned int x, unsigned int y, unsigned int dx, unsigned int dy, unsigned char color, unsigned char fillcolor, rect* shape)
 {
 	shape->flags = RECTANGLE;
 	shape->x = x;

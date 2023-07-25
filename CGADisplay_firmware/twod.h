@@ -54,7 +54,7 @@ typedef struct {
 
 dot* set_dot(unsigned int x, unsigned int y, unsigned char color, dot* shape);
 line* set_line(unsigned int x, unsigned int y, int dx, int dy, char color, line* shape);
-rect* set_rect(unsigned int x, unsigned int y, unsigned char dx, unsigned char dy, unsigned char color, unsigned char fillcolor, rect* shape);
+rect* set_rect(unsigned int x, unsigned int y, unsigned int dx, unsigned int dy, unsigned char color, unsigned char fillcolor, rect* shape);
 circle* set_circle(unsigned int x, unsigned int y, unsigned char r, unsigned char color, unsigned char fillcolor, circle* shape);
 
 unsigned char calc_dot(unsigned int x, unsigned int y, shape* shape);
