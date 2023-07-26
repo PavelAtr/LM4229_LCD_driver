@@ -76,12 +76,16 @@ typedef struct {
 	unsigned char color;
 } spliney;
 
+//x y начало координат примитива
+//dx dx1 dx2 dy dy1 dy2 область определения
 
 dot* set_dot(unsigned int x, unsigned int y, unsigned char color, dot* shape);
 line* set_line(unsigned int x, unsigned int y, int dx, int dy, char color, line* shape);
 rect* set_rect(unsigned int x, unsigned int y, unsigned int dx, unsigned int dy, unsigned char color, unsigned char fillcolor, rect* shape);
 circle* set_circle(unsigned int x, unsigned int y, unsigned char r, unsigned char color, unsigned char fillcolor, circle* shape);
+//y = k1*x^2 + k2*x
 splinex* set_splinex(int x, int y, int dx1,  int dx2, float k1, float k2, unsigned char color, splinex* shape);
+//x = k1*y^2 + k2*y
 spliney* set_spliney(int x, int y, int dy1,  int dy2, float k1, float k2, unsigned char color, spliney* shape);
 
 unsigned char calc_dot(unsigned int x, unsigned int y, shape* shape);
