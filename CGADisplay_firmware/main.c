@@ -19,9 +19,10 @@ void text(void)
 void draw(shape** shapes, unsigned char shapes_count)
 {
 	unsigned int scene_x1 = 20;
-	unsigned int scene_x2 = 80;
+	unsigned int scene_x2 = 100;
 	unsigned int scene_y1 = 40;
 	unsigned int scene_y2 = 100;
+
 	dpy_set_address_pointer(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
 	for (unsigned int y = 0; y < DISPLAY_HEIGHT; y++)
 		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
@@ -42,6 +43,8 @@ line line1;
 line line2;
 line line3;
 dot dot1;
+splinex spline1;
+spliney spline2;
 
 
 int main(void)
@@ -61,13 +64,15 @@ int main(void)
 	shapes[2] = (shape*)set_line(20, 70, 30, 30, BLACK, &line1);
 	shapes[3] = (shape*)set_line(50, 100, 30, -30, BLACK, &line2);
 	shapes[4] = (shape*)set_line(20, 70, 60, 0, BLACK, &line3);
-	shapes[5] = (shape*)set_dot(50, 60, BLACK, &dot1);
+	shapes[5] = (shape*)set_dot(50, 80, BLACK, &dot1);
+	shapes[6] = (shape*)set_splinex(70, 85, -20, 0, -0.1, -0.05, BLACK, &spline1);
+	shapes[7] = (shape*)set_spliney(70, 85, -20, 0, -0.1, -0.05, BLACK, &spline2);
 	
     while (1)
     {
 		dpy_clear();
 		text();		
-		draw(shapes, 6);
+		draw(shapes, 8);
     }
 }
 

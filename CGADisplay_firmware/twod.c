@@ -46,6 +46,31 @@ circle* set_circle(unsigned int x, unsigned int y, unsigned char r, unsigned cha
 	return shape;
 }
 
+splinex* set_splinex(int x, int y, int dx1,  int dx2, float k1, float k2, unsigned char color, splinex* shape)
+{
+	shape->flags = SPLINEX;
+	shape->x = x;
+	shape->y = y;
+	shape->dx1 = dx1;
+	shape->dx2 = dx2;
+	shape->k1 = k1;
+	shape->k2 = k2;
+	shape->color = color;
+	return shape;
+}
+
+spliney* set_spliney(int x, int y, int dy1,  int dy2, float k1, float k2, unsigned char color, spliney* shape)
+{
+	shape->flags = SPLINEY;
+	shape->x = x;
+	shape->y = y;
+	shape->dy1 = dy1;
+	shape->dy2 = dy2;
+	shape->k1 = k1;
+	shape->k2 = k2;
+	shape->color = color;
+	return shape;
+}
 
 unsigned char calc_dot(unsigned int x, unsigned int y, shape* shape)
 {
@@ -59,18 +84,18 @@ unsigned char calc_line(unsigned int x, unsigned int y, shape* shape)
 	int dx = x - ((line*)shape)->x;
 	int dy = y - ((line*)shape)->y;
 	
-	if (dx <= 0 && dx >= ((line*)shape)->dx)
+	if (dx <= 0 || dx >= ((line*)shape)->dx)
 		return TRANSPARENT_COLOR;
 		
-	if (dy < 0 && dy > ((line*)shape)->dy && ((line*)shape)->dy >= 0)
+	if ((dy < 0 || dy > ((line*)shape)->dy) && ((line*)shape)->dy >= 0)
 		return TRANSPARENT_COLOR;
 
-	if (dy > 0 && dy < ((line*)shape)->dy && ((line*)shape)->dy < 0)
+	if ((dy > 0 || dy < ((line*)shape)->dy) && ((line*)shape)->dy < 0)
 		return TRANSPARENT_COLOR;
 
 	double k = (double)(((line*)shape)->dy/((line*)shape)->dx);
 
-	if (dx >= 0 && dx <= ((line*)shape)->dx && dy == k * dx)
+	if (dy == k * dx)
 		return ((line*)shape)->color;
 
 
@@ -90,10 +115,10 @@ unsigned char calc_rect(unsigned int x, unsigned int y, shape* shape)
 	{
 		color = ((rect*)shape)->fillcolor;
 
-		if (dx >= 0 && dx <= ((rect*)shape)->dx && (dy == 0 || dy == ((rect*)shape)->dy))
+		if (dy == 0 || dy == ((rect*)shape)->dy)
 			color = ((rect*)shape)->color;
 
-		if (dy >= 0 && dy <= ((rect*)shape)->dy && (dx == 0 || dx == ((rect*)shape)->dx))
+		if (dx == 0 || dx == ((rect*)shape)->dx)
 			color = ((rect*)shape)->color;
 	}
 		
@@ -121,7 +146,40 @@ unsigned char calc_circle(unsigned int x, unsigned int y, shape* shape)
 	return color;
 }
 
-#define NUM_ROWS 16
+unsigned char calc_splinex(unsigned int x, unsigned int y, shape* shape)
+{
+	unsigned char color = TRANSPARENT_COLOR;
+	int dx = x - ((splinex*)shape)->x;
+	int dy = y - ((splinex*)shape)->y;
+	
+	if ((dx < ((splinex*)shape)->dx1 || dx > ((splinex*)shape)->dx2))
+		return TRANSPARENT_COLOR;
+	
+	int dytemp = (int)(((splinex*)shape)->k1 * dx * dx + ((splinex*)shape)->k2 * dx);
+	
+	if (dy == dytemp || dy + 1 == dytemp)
+		color = ((splinex*)shape)->color;
+
+	return color;
+}
+
+unsigned char calc_spliney(unsigned int x, unsigned int y, shape* shape)
+{
+	unsigned char color = TRANSPARENT_COLOR;
+	int dx = x - ((spliney*)shape)->x;
+	int dy = y - ((spliney*)shape)->y;
+	
+	if ((dy < ((spliney*)shape)->dy1 || dy > ((spliney*)shape)->dy2))
+		return TRANSPARENT_COLOR;
+	
+	int dxtemp = (int)(((spliney*)shape)->k1 * dy * dy + ((spliney*)shape)->k2 * dy);
+	
+	if (dx == dxtemp || dx + 1 == dxtemp)
+	color = ((spliney*)shape)->color;
+
+	return color;
+}
+
 
 unsigned char point_color(unsigned int x, unsigned int y, shape** shapes, unsigned char shapes_count)
 {
@@ -145,6 +203,12 @@ unsigned char point_color(unsigned int x, unsigned int y, shape** shapes, unsign
 				break;
 			case CIRCLE:
 				color = calc_circle(x, y, shapes[j]);
+				break;
+			case SPLINEX:
+				color = calc_splinex(x, y, shapes[j]);
+				break;
+			case SPLINEY:
+				color = calc_spliney(x, y, shapes[j]);
 				break;
 			default:
 				color = TRANSPARENT_COLOR;
