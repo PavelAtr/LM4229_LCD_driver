@@ -167,22 +167,29 @@ unsigned int cached_address = 0;
 void dpy_set_cached_address(unsigned int address)
 {
 	if (address != cached_address)
+	{
 		dpy_set_address_pointer(address);
+		cached_address = address;
+	}
 }
 
-unsigned char dpy_data_write(unsigned int address, unsigned char data)
+unsigned char dpy_data_write(unsigned int address, unsigned char data, unsigned char writecmd)
 {
 	dpy_set_cached_address(address);
 	dpy_data_write_mode();
 	unsigned char ret = dpy_send_param(data);
-	ret |= dpy_send_cmd(DATA_WRITE);
+	ret |= dpy_send_cmd(writecmd);
+	if (writecmd == DATA_WRITE_INC) cached_address++;
+	if (writecmd == DATA_WRITE_DEC) cached_address--;
 	return dpy_status_read();
 }
 
-unsigned char dpy_data_read(unsigned int address)
+unsigned char dpy_data_read(unsigned int address, unsigned char readcmd)
 {
 	dpy_set_cached_address(address);
-	dpy_send_cmd(DATA_READ);
+	dpy_send_cmd(readcmd);
+	if (readcmd == DATA_READ_INC) cached_address++;
+	if (readcmd == DATA_READ_DEC) cached_address--;
 	dpy_data_read_mode();
 	PORTCMD &= ~CE;
 	_delay_us(HARDWARE_DELAY);
@@ -203,7 +210,7 @@ void dpy_point(unsigned int x, unsigned int y, unsigned char color, unsigned cha
 	if (color == DISPLAY_BLACK) dpy_cell |= (0b010000000 >> bitnum);
 	else dpy_cell &= ~(0b010000000 >> bitnum);
 	if (bitnum == 7 || send)
-		dpy_data_write(GRAPHIC_AREA + pos, dpy_cell);
+		dpy_data_write(GRAPHIC_AREA + pos, dpy_cell, DATA_WRITE_INC);
 }
 
 void dpy_clear(unsigned char color)
@@ -212,7 +219,7 @@ void dpy_clear(unsigned char color)
 	for (unsigned int y = 0; y < DISPLAY_HEIGHT; y++)
 		for (unsigned int x = 0; x < DISPLAY_WIDTH / 8; x++)
 		{
-			dpy_data_write(GRAPHIC_AREA + pos, color);
+			dpy_data_write(GRAPHIC_AREA + pos, color, DATA_WRITE_INC);
 			pos++;
 		}
 }

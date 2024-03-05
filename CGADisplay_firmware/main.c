@@ -15,7 +15,7 @@ void text(void)
 	unsigned int dpy_text = 0;
 	for (unsigned char i = 0; i < 255; i++)
 	{
-		dpy_data_write(TEXT_AREA + dpy_text, i);
+		dpy_data_write(TEXT_AREA + dpy_text, i, DATA_WRITE);
 		dpy_text++;
 	}
 }

@@ -72,6 +72,10 @@
 #define SET_TEXT_AREA 0b01000001
 #define DATA_WRITE 0b11000100
 #define DATA_READ 0b11000101
+#define DATA_WRITE_INC 0b11000000
+#define DATA_READ_INC 0b11000001
+#define DATA_WRITE_DEC 0b11000010
+#define DATA_READ_DEC 0b11000011
 #define SET_CURSOR_POINTER 0b00100001
 #define SET_OFFSET_REGISTER 0b00100010
 #define SET_ADDRESS_POINTER 0b00100100
@@ -88,8 +92,8 @@ unsigned char dpy_set_cursor_pointer(unsigned int address);
 unsigned char dpy_set_text_area(unsigned char columns);
 unsigned char dpy_set_address_pointer(unsigned int address);
 void dpy_set_cached_address(unsigned int address);
-unsigned char dpy_data_write(unsigned int address, unsigned char data);
-unsigned char dpy_data_read(unsigned int address);
+unsigned char dpy_data_write(unsigned int address, unsigned char data, unsigned char writecmd);
+unsigned char dpy_data_read(unsigned int address, unsigned char readcmd);
 extern unsigned char dpy_cell;
 void dpy_point(unsigned int x, unsigned int y, unsigned char color, unsigned char send);
 void dpy_clear(unsigned char color);
