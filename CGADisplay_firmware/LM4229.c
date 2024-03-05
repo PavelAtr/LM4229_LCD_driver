@@ -1,5 +1,4 @@
 #include "LM4229.h"
-#include "main.h"
 #include <util/delay.h>
 
 enum dpy_mode{command_write, data_write, status_read, data_read};
@@ -183,7 +182,7 @@ unsigned char dpy_point(unsigned char color)
 void dpy_clear()
 {
 	dpy_set_address_pointer(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
-	for (unsigned char y = 0; y < DISPLAY_HEIGHT; y++)
+	for (unsigned int y = 0; y < DISPLAY_HEIGHT; y++)
 		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
 			dpy_point(DISPLAY_BACKGROUND);
 }

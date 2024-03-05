@@ -3,6 +3,8 @@
 
 #include <avr/io.h>
 
+#define F_CPU 8000000
+
 #define BIT0 0
 #define BIT1 1
 #define BIT2 2
@@ -27,7 +29,7 @@
 #define DISPLAY_WHITE 0x00
 #define DISPLAY_BACKGROUND DISPLAY_WHITE
 
-#define HARDWARE_DELAY 0
+#define HARDWARE_DELAY 10
 
 #define CD (1<<BIT0) 
 #define RD (1<<BIT1) 

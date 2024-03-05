@@ -4,7 +4,6 @@
  * Created: 24.07.2023 3:29:55
  * Author : pvsam
  */ 
-#define F_CPU 8000000
 
 #include <avr/io.h>
 #include "twod.h"
