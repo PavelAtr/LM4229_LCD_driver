@@ -36,7 +36,6 @@ typedef struct {
 	point_t dx;
 	point_t dy;
 	point_t cache_dx;
-	point_t cache_dy;
 	float k;
 	color_t color;
 	} line;

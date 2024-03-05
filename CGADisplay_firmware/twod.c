@@ -38,6 +38,9 @@ color_t gorizontal_line(point_t idx, point_t idy, shape* shap)
 	
 }
 
+point_t cache_dy;
+shape* cache_line;
+
 color_t vertical_line(point_t idx, point_t idy, shape* shap)
 {
 	line* line1 = (line*) shap;
@@ -46,10 +49,11 @@ color_t vertical_line(point_t idx, point_t idy, shape* shap)
 	(line1->dy <= 0 && idy >= line1->dy && idy <= 0)))
 		return NOTDEFINED;
 
-	if (line1->cache_dy != idy)
+	if (cache_dy != idy || cache_line != shap)
 	{
 		line1->cache_dx = line1->k * idy;
-		line1->cache_dy = idy;
+		cache_dy = idy;
+		cache_line = shap;
 	}
 		
 	if (line1->cache_dx == idx) return CONTUR;
@@ -68,7 +72,6 @@ line* set_line(upoint_t x1, upoint_t y1, upoint_t x2, upoint_t y2, char color, l
 	shap->dx = x2 - x1;
 	shap->dy = y2 - y1;
 	shap->cache_dx = 0;
-	shap->cache_dy = 0;
 	shap->color = color;
 	if (shap->dy == 0)
 		shap->k = 0;

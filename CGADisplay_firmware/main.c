@@ -20,18 +20,18 @@ void text(void)
 	}
 }
 
-void draw(shape** shapes, unsigned char shapes_count)
+unsigned char twod_to_display_color(color_t color)
+{
+	return (color == TWOD_BLACK)? DISPLAY_BLACK : DISPLAY_WHITE;
+}
+
+void draw(shape** shapes, unsigned char shapes_count, upoint_t x1, upoint_t y1, upoint_t x2, upoint_t y2)
 {
 	dpy_cell = 0;
-	for (upoint_t y = 8; y < 128; y++)
-		for (upoint_t x = 8; x < 128; x++)
-		{
-			color_t color = draw_shapes(x, y, shapes, shapes_count, TWOD_WHITE);
-			if (color == TWOD_BLACK)
-				dpy_point(x, y, DISPLAY_BLACK, 0);
-			else
-				dpy_point(x, y, DISPLAY_WHITE, 0);
-		}
+	//Order of cycles important for lines and display addressing optimizations
+	for (upoint_t y = y1; y < y2; y++)
+		for (upoint_t x = x1; x < x2; x++)
+			dpy_point(x, y, twod_to_display_color(draw_shapes(x, y, shapes, shapes_count, TWOD_WHITE)), 0);
 }
 
 shape* shapes[10];
@@ -62,7 +62,7 @@ int main(void)
     {
 		dpy_clear(DISPLAY_WHITE);
 		text();	
-		draw(shapes, 6);
+		draw(shapes, 6, 8, 8, 128, 128);
     } 
 }
 
