@@ -173,15 +173,19 @@ color_t calc_square(upoint_t x, upoint_t y, shape* shap, color_t transparent)
 
 }
 
-circle* set_circle(upoint_t x, upoint_t y, upoint_t r, color_t color, color_t fillcolor, circle* shape)
+circle* set_circle(upoint_t x, upoint_t y, point_t x1, point_t y1, point_t x2, point_t y2, upoint_t r, color_t color, color_t fillcolor, circle* shap)
 {
-	shape->flags = CIRCLE;
-	shape->x = x;
-	shape->y = y;
-	shape->r = r;
-	shape->color = color;
-	shape->fillcolor = fillcolor;
-	return shape;
+	shap->flags = CIRCLE;
+	shap->x = x;
+	shap->y = y;
+	shap->r = r;
+	shap->x1 = x1;
+	shap->y1 = y1;
+	shap->x2 = x2;
+	shap->y2 = y2;
+	shap->color = color;
+	shap->fillcolor = fillcolor;
+	return shap;
 }
 
 
@@ -189,84 +193,20 @@ color_t calc_circle(upoint_t x, upoint_t y, shape* shap, color_t transparent)
 {
 	color_t color = transparent;
 	
-	if (x >= ((circle*)shap)->x - ((circle*)shap)->r &&
-	x <= ((circle*)shap)->x + ((circle*)shap)->r &&
-	y >= ((circle*)shap)->y - ((circle*)shap)->r &&
-	y <= ((circle*)shap)->y + ((circle*)shap)->r)
-	{
-		point_t dx = ((circle*)shap)->x - x;
-		point_t dy = ((circle*)shap)->y - y;
-		upoint_t r = sqrt(dx * dx +  dy * dy);
-		if (r < ((circle*)shap)->r)
+	if (x < ((circle*)shap)->x1 || x > ((circle*)shap)->x2 ||
+		y < ((circle*)shap)->y1 || y > ((circle*)shap)->y2)
+		return transparent;
+
+	point_t dx = ((circle*)shap)->x - x;
+	point_t dy = ((circle*)shap)->y - y;
+	upoint_t r = sqrt(dx * dx +  dy * dy);
+	if (r < ((circle*)shap)->r)
 		color = ((circle*)shap)->fillcolor == (TWOD_TRANSPARENT) ? transparent : ((circle*)shap)->fillcolor;
-		if (r == ((circle*)shap)->r)
+	if (r == ((circle*)shap)->r)
 		color = (((circle*)shap)->color);
-	}
 	
 	return color;
 }
-
-splinex* set_splinex(point_t x, point_t y, point_t dx1,  point_t dx2, float k1, float k2, color_t color, splinex* shape)
-{
-	shape->flags = SPLINEX;
-	shape->x = x;
-	shape->y = y;
-	shape->dx1 = dx1;
-	shape->dx2 = dx2;
-	shape->k1 = k1;
-	shape->k2 = k2;
-	shape->color = color;
-	return shape;
-}
-
-spliney* set_spliney(point_t x, point_t y, point_t dy1,  point_t dy2, float k1, float k2, color_t color, spliney* shape)
-{
-	shape->flags = SPLINEY;
-	shape->x = x;
-	shape->y = y;
-	shape->dy1 = dy1;
-	shape->dy2 = dy2;
-	shape->k1 = k1;
-	shape->k2 = k2;
-	shape->color = color;
-	return shape;
-}
-
-color_t calc_splinex(upoint_t x, upoint_t y, shape* shap, color_t transparent)
-{
-	color_t color = transparent;
-	point_t dx = x - ((splinex*)shap)->x;
-	point_t dy = y - ((splinex*)shap)->y;
-	
-	if ((dx < ((splinex*)shap)->dx1 || dx > ((splinex*)shap)->dx2))
-	return transparent;
-	
-	point_t dytemp = (point_t)(((splinex*)shap)->k1 * dx * dx + ((splinex*)shap)->k2 * dx);
-	
-	if (dy == dytemp || dy + 1 == dytemp)
-	color = ((splinex*)shap)->color;
-
-	return color;
-}
-
-
-color_t calc_spliney(upoint_t x, upoint_t y, shape* shap, color_t transparent)
-{
-	color_t color = transparent;
-	point_t dx = x - ((spliney*)shap)->x;
-	point_t dy = y - ((spliney*)shap)->y;
-	
-	if ((dy < ((spliney*)shap)->dy1 || dy > ((spliney*)shap)->dy2))
-	return transparent;
-	
-	point_t dxtemp = (point_t)(((spliney*)shap)->k1 * dy * dy + ((spliney*)shap)->k2 * dy);
-	
-	if (dx == dxtemp || dx + 1 == dxtemp)
-	color = ((spliney*)shap)->color;
-
-	return color;
-}
-
 
 color_t draw_shapes(upoint_t x, upoint_t y, shape** shapes, unsigned int shapes_count, color_t transparent)
 {
@@ -291,12 +231,6 @@ color_t draw_shapes(upoint_t x, upoint_t y, shape** shapes, unsigned int shapes_
 				break;
 			case CIRCLE:
 				color = calc_circle(x, y, shapes[j], color);
-				break;
-			case SPLINEX:
-				color = calc_splinex(x, y, shapes[j], color);
-				break;
-			case SPLINEY:
-				color = calc_spliney(x, y, shapes[j], color);
 				break;
 			default:
 				color = transparent;

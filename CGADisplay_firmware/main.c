@@ -38,8 +38,6 @@ shape* shapes[10];
 squar squar1;
 circle circle1;
 dot dot1;
-splinex spline1;
-spliney spline2;
 triangle triangle1;
 
 
@@ -54,15 +52,13 @@ int main(void)
 	shapes[0] = (shape*)set_square(20, 10, 60, 10, 70, 100, 10, 100, TWOD_BLACK, TWOD_BLACK, &squar1);//	shapes[1] = (shape*)set_circle(50, 70, 30, WHITE, WHITE, &circle1);
 	shapes[1] = (shape*)set_triangle(40, 10, 70, 100, 10, 100, TWOD_WHITE, TWOD_WHITE, &triangle1);
 	shapes[2] = (shape*)set_dot(40, 50, TWOD_BLACK, &dot1);
-	shapes[3] = (shape*)set_splinex(70, 85, -20, 20, -0.1, -0.05, TWOD_BLACK, &spline1);
-	shapes[4] = (shape*)set_spliney(70, 85, -20, 20, -0.1, -0.05, TWOD_BLACK, &spline2);
-	shapes[5] = (shape*)set_circle(70, 85, 20, TWOD_BLACK, TWOD_TRANSPARENT, &circle1);
+	shapes[4] = (shape*)set_circle(40, 80, 40, 60, 60, 80, 20, TWOD_BLACK, TWOD_BLACK, &circle1);
 
 	while (1)
     {
 		dpy_clear(DISPLAY_WHITE);
 		text();	
-		draw(shapes, 6, 8, 8, 128, 128);
+		draw(shapes, 5, 8, 8, 128, 128);
     } 
 }
 
