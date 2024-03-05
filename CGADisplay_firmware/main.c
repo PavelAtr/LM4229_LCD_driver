@@ -4,6 +4,7 @@
  * Created: 24.07.2023 3:29:55
  * Author : pvsam
  */ 
+#define F_CPU 8000000
 
 #include <avr/io.h>
 #include "twod.h"
@@ -22,8 +23,8 @@ void draw(shape** shapes, unsigned char shapes_count)
 	for (upoint_t y = 0; y < DISPLAY_HEIGHT; y++)
 		for (upoint_t x = 0; x < DISPLAY_WIDTH; x++)
 		{
-			color_t color = draw_shapes(x, y, shapes, shapes_count, COLOR_WHITE);
-			if (color == COLOR_BLACK)
+			color_t color = draw_shapes(x, y, shapes, shapes_count, TWOD_WHITE);
+			if (color == TWOD_BLACK)
 				dpy_point(DISPLAY_BLACK);
 			else
 				dpy_point(DISPLAY_WHITE);
@@ -53,12 +54,12 @@ int main(void)
 	dpy_set_graphic_home(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
 	dpy_set_text_home(TEXT_AREA >> 8, TEXT_AREA & 0x00FF);
 	
-	shapes[0] = (shape*)set_square(20, 10, 60, 10, 70, 100, 10, 100, COLOR_BLACK, COLOR_WHITE, &squar1);//	shapes[1] = (shape*)set_circle(50, 70, 30, WHITE, WHITE, &circle1);
-	shapes[1] = (shape*)set_triangle(40, 10, 70, 100, 10, 100, COLOR_WHITE, COLOR_BLACK, &triangle1);
-	shapes[2] = (shape*)set_dot(40, 50, COLOR_WHITE, &dot1);
-	shapes[3] = (shape*)set_splinex(70, 85, -20, 20, -0.1, -0.05, COLOR_WHITE, &spline1);
-	shapes[4] = (shape*)set_spliney(70, 85, -20, 20, -0.1, -0.05, COLOR_WHITE, &spline2);
-	shapes[5] = (shape*)set_circle(70, 85, 20, COLOR_WHITE, COLOR_TRANSPARENT, &circle1);
+	shapes[0] = (shape*)set_square(20, 10, 60, 10, 70, 100, 10, 100, TWOD_BLACK, TWOD_WHITE, &squar1);//	shapes[1] = (shape*)set_circle(50, 70, 30, WHITE, WHITE, &circle1);
+	shapes[1] = (shape*)set_triangle(40, 10, 70, 100, 10, 100, TWOD_WHITE, TWOD_BLACK, &triangle1);
+	shapes[2] = (shape*)set_dot(40, 50, TWOD_WHITE, &dot1);
+	shapes[3] = (shape*)set_splinex(70, 85, -20, 20, -0.1, -0.05, TWOD_WHITE, &spline1);
+	shapes[4] = (shape*)set_spliney(70, 85, -20, 20, -0.1, -0.05, TWOD_WHITE, &spline2);
+	shapes[5] = (shape*)set_circle(70, 85, 20, TWOD_WHITE, TWOD_TRANSPARENT, &circle1);
 
 	
     while (1)

@@ -10,9 +10,9 @@
 #define SPLINEY 6
 #define SHAPE_MASK 0x07
 
-#define COLOR_BLACK 1
-#define COLOR_WHITE 2
-#define COLOR_TRANSPARENT 0
+#define TWOD_BLACK 1
+#define TWOD_WHITE 2
+#define TWOD_TRANSPARENT 0
 
 typedef unsigned int upoint_t;
 typedef int point_t;

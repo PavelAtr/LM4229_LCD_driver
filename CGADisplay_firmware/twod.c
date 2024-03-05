@@ -126,9 +126,9 @@ color_t calc_triangle(upoint_t x, upoint_t y, shape* shap, color_t transparent)
 	
 	
 	
-	if (ret1 == LEFTER && (ret2 == RIGHTER || ret3 == RIGHTER)) return ((triangle*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((triangle*)shap)->fillcolor;
-	if (ret2 == LEFTER && (ret1 == RIGHTER || ret3 == RIGHTER)) return ((triangle*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((triangle*)shap)->fillcolor;
-	if (ret3 == LEFTER && (ret1 == RIGHTER || ret2 == RIGHTER)) return ((triangle*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((triangle*)shap)->fillcolor;
+	if (ret1 == LEFTER && (ret2 == RIGHTER || ret3 == RIGHTER)) return ((triangle*)shap)->fillcolor == (TWOD_TRANSPARENT) ? transparent : ((triangle*)shap)->fillcolor;
+	if (ret2 == LEFTER && (ret1 == RIGHTER || ret3 == RIGHTER)) return ((triangle*)shap)->fillcolor == (TWOD_TRANSPARENT) ? transparent : ((triangle*)shap)->fillcolor;
+	if (ret3 == LEFTER && (ret1 == RIGHTER || ret2 == RIGHTER)) return ((triangle*)shap)->fillcolor == (TWOD_TRANSPARENT) ? transparent : ((triangle*)shap)->fillcolor;
 	
 	return transparent;
 }
@@ -161,10 +161,10 @@ color_t calc_square(upoint_t x, upoint_t y, shape* shap, color_t transparent)
 	if (ret1 == CONTUR || ret2 == CONTUR || ret3 == CONTUR || ret4 == CONTUR)
 	return ((squar*)shap)->color;
 	
-	if (ret1 == LEFTER && (ret2 == RIGHTER || ret3 == RIGHTER || ret4 == RIGHTER)) return ((squar*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
-	if (ret2 == LEFTER && (ret1 == RIGHTER || ret3 == RIGHTER || ret4 == RIGHTER)) return ((squar*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
-	if (ret3 == LEFTER && (ret2 == RIGHTER || ret1 == RIGHTER || ret4 == RIGHTER)) return ((squar*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
-	if (ret4 == LEFTER && (ret2 == RIGHTER || ret3 == RIGHTER || ret1 == RIGHTER)) return ((squar*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
+	if (ret1 == LEFTER && (ret2 == RIGHTER || ret3 == RIGHTER || ret4 == RIGHTER)) return ((squar*)shap)->fillcolor == (TWOD_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
+	if (ret2 == LEFTER && (ret1 == RIGHTER || ret3 == RIGHTER || ret4 == RIGHTER)) return ((squar*)shap)->fillcolor == (TWOD_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
+	if (ret3 == LEFTER && (ret2 == RIGHTER || ret1 == RIGHTER || ret4 == RIGHTER)) return ((squar*)shap)->fillcolor == (TWOD_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
+	if (ret4 == LEFTER && (ret2 == RIGHTER || ret3 == RIGHTER || ret1 == RIGHTER)) return ((squar*)shap)->fillcolor == (TWOD_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
 	
 	return transparent;
 
@@ -195,7 +195,7 @@ color_t calc_circle(upoint_t x, upoint_t y, shape* shap, color_t transparent)
 		point_t dy = ((circle*)shap)->y - y;
 		upoint_t r = sqrt(dx * dx +  dy * dy);
 		if (r < ((circle*)shap)->r)
-		color = ((circle*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((circle*)shap)->fillcolor;
+		color = ((circle*)shap)->fillcolor == (TWOD_TRANSPARENT) ? transparent : ((circle*)shap)->fillcolor;
 		if (r == ((circle*)shap)->r)
 		color = (((circle*)shap)->color);
 	}
