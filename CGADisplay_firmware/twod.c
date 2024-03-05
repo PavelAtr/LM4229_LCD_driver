@@ -1,6 +1,13 @@
 #include "twod.h"
 #include <math.h>
 
+#define CONTUR	1
+#define UPPER	2
+#define LOWER	3
+#define LEFTER	4
+#define RIGHTER	5
+#define NOTDEFINED	6
+
 dot* set_dot(upoint_t x, upoint_t y, color_t color, dot* shape)
 {
 	shape->flags = DOT;

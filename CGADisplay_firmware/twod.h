@@ -14,13 +14,6 @@
 #define COLOR_WHITE 0x00
 #define COLOR_TRANSPARENT 0x0F
 
-#define CONTUR	1
-#define UPPER	2
-#define LOWER	3
-#define LEFTER	4
-#define RIGHTER	5
-#define NOTDEFINED	6
-
 typedef unsigned int upoint_t;
 typedef int point_t;
 typedef unsigned char color_t;
@@ -116,7 +109,6 @@ color_t calc_circle(upoint_t x, upoint_t y, shape* shap, color_t transparent);
 color_t calc_splinex(upoint_t x, upoint_t y, shape* shap, color_t transparent);
 color_t calc_spliney(upoint_t x, upoint_t y, shape* shap, color_t transparent);
 
-//typedef void (*draw_popoint_t_function)(char color);
 color_t draw_shapes(upoint_t x, upoint_t y, shape** shapes, unsigned int shapes_count, color_t transparent);
 
 #endif
