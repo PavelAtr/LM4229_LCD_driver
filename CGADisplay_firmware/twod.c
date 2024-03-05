@@ -1,7 +1,7 @@
 #include "twod.h"
 #include <math.h>
 
-dot* set_dot(unsigned int x, unsigned int y, unsigned char color, dot* shape)
+dot* set_dot(upoint_t x, upoint_t y, color_t color, dot* shape)
 {
 	shape->flags = DOT;
 	shape->x = x;
@@ -11,31 +11,167 @@ dot* set_dot(unsigned int x, unsigned int y, unsigned char color, dot* shape)
 	return shape;
 }
 
-line* set_line(unsigned int x, unsigned int y, int dx, int dy, char color, line* shape)
+color_t calc_dot(upoint_t x, upoint_t y, shape* shap, color_t transparent)
 {
-	shape->flags = LINE;
-	shape->x = x;
-	shape->y = y;
-	shape->dx = dx;
-	shape->dy = dy;
-	shape->color = color;
-	return shape;
+	if (x == ((dot*)shap)->x && y == ((dot*)shap)->y)
+	return ((dot*)shap)->color;
+	return transparent;
+}
+
+color_t gorizontal_line(point_t idx, point_t idy, shape* shap)
+{
+	
+	line* line1 = (line*) shap;
+	
+	if (!(idy == 0 && ((line1->dx >= 0 && idx <= line1->dx && idx >= 0) ||
+	(line1->dx <= 0 && idx >= line1->dx && idx <= 0 )))) return NOTDEFINED;
+	
+	return CONTUR;
+	
+	
+}
+
+color_t vertical_line(point_t idx, point_t idy, shape* shap)
+{
+	line* line1 = (line*) shap;
+		
+	if (!((line1->dy >= 0 && idy <= line1->dy && idy >= 0) ||
+	(line1->dy <= 0 && idy >= line1->dy && idy <= 0)))
+		return NOTDEFINED;
+
+	if (line1->cache_dy != idy)
+	{
+		line1->cache_dx = line1->k * idy;
+		line1->cache_dy = idy;
+	}
+		
+	if (line1->cache_dx == idx) return CONTUR;
+	if (line1->cache_dx > idx) return LEFTER;
+	if (line1->cache_dx < idx) return RIGHTER;
+		
+	return NOTDEFINED;
 }
 
 
-rect* set_rect(unsigned int x, unsigned int y, unsigned int dx, unsigned int dy, unsigned char color, unsigned char fillcolor, rect* shape)
+line* set_line(upoint_t x1, upoint_t y1, upoint_t x2, upoint_t y2, char color, line* shap)
 {
-	shape->flags = RECTANGLE;
-	shape->x = x;
-	shape->y = y;
-	shape->dx = dx;
-	shape->dy = dy;
-	shape->color = color;
-	shape->fillcolor = fillcolor;
-	return shape;
+	shap->flags = LINE;
+	shap->x = x1;
+	shap->y = y1;
+	shap->dx = x2 - x1;
+	shap->dy = y2 - y1;
+	shap->cache_dx = 0;
+	shap->cache_dy = 0;
+	shap->color = color;
+	if (shap->dy == 0)
+		shap->k = 0;
+	else
+		shap->k = (double)shap->dx/(double)shap->dy;
+	
+	return shap;
 }
 
-circle* set_circle(unsigned int x, unsigned int y, unsigned char r, unsigned char color, unsigned char fillcolor, circle* shape)
+color_t calc_line(upoint_t x, upoint_t y, shape* shap, color_t transparent)
+{
+	point_t dx = x - ((line*)shap)->x;
+	point_t dy = y - ((line*)shap)->y;
+
+	if (((line*)shap)->dy == 0)
+	{
+		if (gorizontal_line(dx, dy, shap) == CONTUR)
+			return ((line*)shap)->color;
+	}
+	else
+		if (vertical_line(dx, dy, shap) == CONTUR)
+			return ((line*)shap)->color;
+
+	return transparent;
+}
+
+short calc_line_raw(upoint_t x, upoint_t y, shape* shap)
+{
+	point_t dx = x - ((line*)shap)->x;
+	point_t dy = y - ((line*)shap)->y;
+	
+	if (((line*)shap)->dy == 0)
+		return gorizontal_line(dx, dy, shap);
+	else
+		return vertical_line(dx, dy, shap);
+}
+
+triangle* set_triangle(upoint_t x1, upoint_t y1, upoint_t x2, upoint_t y2, upoint_t x3, upoint_t y3, color_t color, color_t fillcolor, triangle* shap)
+{
+	shap->flags = TRIANGLE;
+	set_line(x1, y1, x2, y2, color, &shap->line1);
+	set_line(x1, y1, x3, y3, color, &shap->line2);
+	set_line(x2, y2, x3, y3, color, &shap->line3);
+	shap->fillcolor = fillcolor;
+	shap->color = color;
+	
+	return shap;
+}
+
+color_t calc_triangle(upoint_t x, upoint_t y, shape* shap, color_t transparent)
+{
+	short ret1, ret2, ret3;
+	line* line1 = &((triangle*)shap)->line1;
+	line* line2 = &((triangle*)shap)->line2;
+	line* line3 = &((triangle*)shap)->line3;
+	
+	ret1 = calc_line_raw(x, y, (shape*)line1);
+	ret2 = calc_line_raw(x, y, (shape*)line2);
+	ret3 = calc_line_raw(x, y, (shape*)line3);
+
+	if (ret1 == CONTUR || ret2 == CONTUR || ret3 == CONTUR)
+	return ((triangle*)shap)->color;
+	
+	
+	
+	if (ret1 == LEFTER && (ret2 == RIGHTER || ret3 == RIGHTER)) return ((triangle*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((triangle*)shap)->fillcolor;
+	if (ret2 == LEFTER && (ret1 == RIGHTER || ret3 == RIGHTER)) return ((triangle*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((triangle*)shap)->fillcolor;
+	if (ret3 == LEFTER && (ret1 == RIGHTER || ret2 == RIGHTER)) return ((triangle*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((triangle*)shap)->fillcolor;
+	
+	return transparent;
+}
+
+squar* set_square(upoint_t x1, upoint_t y1, upoint_t x2, upoint_t y2, upoint_t x3, upoint_t y3, upoint_t x4, upoint_t y4, color_t color, color_t fillcolor, squar* shap)
+{
+	shap->flags = SQUARE;
+	set_line(x1, y1, x2, y2, color, &shap->line1);
+	set_line(x2, y2, x3, y3, color, &shap->line2);
+	set_line(x3, y3, x4, y4, color, &shap->line3);
+	set_line(x1, y1, x4, y4, color, &shap->line4);
+	shap->color = color;
+	shap->fillcolor = fillcolor;
+	return shap;
+}
+
+color_t calc_square(upoint_t x, upoint_t y, shape* shap, color_t transparent)
+{
+	short ret1, ret2, ret3, ret4;
+	line* line1 = &((squar*)shap)->line1;
+	line* line2 = &((squar*)shap)->line2;
+	line* line3 = &((squar*)shap)->line3;
+	line* line4 = &((squar*)shap)->line4;
+	
+	ret1 = calc_line_raw(x, y, (shape*)line1);
+	ret2 = calc_line_raw(x, y, (shape*)line2);
+	ret3 = calc_line_raw(x, y, (shape*)line3);
+	ret4 = calc_line_raw(x, y, (shape*)line4);
+
+	if (ret1 == CONTUR || ret2 == CONTUR || ret3 == CONTUR || ret4 == CONTUR)
+	return ((squar*)shap)->color;
+	
+	if (ret1 == LEFTER && (ret2 == RIGHTER || ret3 == RIGHTER || ret4 == RIGHTER)) return ((squar*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
+	if (ret2 == LEFTER && (ret1 == RIGHTER || ret3 == RIGHTER || ret4 == RIGHTER)) return ((squar*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
+	if (ret3 == LEFTER && (ret2 == RIGHTER || ret1 == RIGHTER || ret4 == RIGHTER)) return ((squar*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
+	if (ret4 == LEFTER && (ret2 == RIGHTER || ret3 == RIGHTER || ret1 == RIGHTER)) return ((squar*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((squar*)shap)->fillcolor;
+	
+	return transparent;
+
+}
+
+circle* set_circle(upoint_t x, upoint_t y, upoint_t r, color_t color, color_t fillcolor, circle* shape)
 {
 	shape->flags = CIRCLE;
 	shape->x = x;
@@ -46,7 +182,29 @@ circle* set_circle(unsigned int x, unsigned int y, unsigned char r, unsigned cha
 	return shape;
 }
 
-splinex* set_splinex(int x, int y, int dx1,  int dx2, float k1, float k2, unsigned char color, splinex* shape)
+
+color_t calc_circle(upoint_t x, upoint_t y, shape* shap, color_t transparent)
+{
+	color_t color = transparent;
+	
+	if (x >= ((circle*)shap)->x - ((circle*)shap)->r &&
+	x <= ((circle*)shap)->x + ((circle*)shap)->r &&
+	y >= ((circle*)shap)->y - ((circle*)shap)->r &&
+	y <= ((circle*)shap)->y + ((circle*)shap)->r)
+	{
+		point_t dx = ((circle*)shap)->x - x;
+		point_t dy = ((circle*)shap)->y - y;
+		upoint_t r = sqrt(dx * dx +  dy * dy);
+		if (r < ((circle*)shap)->r)
+		color = ((circle*)shap)->fillcolor == (COLOR_TRANSPARENT) ? transparent : ((circle*)shap)->fillcolor;
+		if (r == ((circle*)shap)->r)
+		color = (((circle*)shap)->color);
+	}
+	
+	return color;
+}
+
+splinex* set_splinex(point_t x, point_t y, point_t dx1,  point_t dx2, float k1, float k2, color_t color, splinex* shape)
 {
 	shape->flags = SPLINEX;
 	shape->x = x;
@@ -59,7 +217,7 @@ splinex* set_splinex(int x, int y, int dx1,  int dx2, float k1, float k2, unsign
 	return shape;
 }
 
-spliney* set_spliney(int x, int y, int dy1,  int dy2, float k1, float k2, unsigned char color, spliney* shape)
+spliney* set_spliney(point_t x, point_t y, point_t dy1,  point_t dy2, float k1, float k2, color_t color, spliney* shape)
 {
 	shape->flags = SPLINEY;
 	shape->x = x;
@@ -72,150 +230,77 @@ spliney* set_spliney(int x, int y, int dy1,  int dy2, float k1, float k2, unsign
 	return shape;
 }
 
-unsigned char calc_dot(unsigned int x, unsigned int y, shape* shape)
+color_t calc_splinex(upoint_t x, upoint_t y, shape* shap, color_t transparent)
 {
-	if (x == ((dot*)shape)->x && y == ((dot*)shape)->y)
-		return ((dot*)shape)->color;
-	return TRANSPARENT_COLOR;
-}
-
-unsigned char calc_line(unsigned int x, unsigned int y, shape* shape)
-{
-	int dx = x - ((line*)shape)->x;
-	int dy = y - ((line*)shape)->y;
+	color_t color = transparent;
+	point_t dx = x - ((splinex*)shap)->x;
+	point_t dy = y - ((splinex*)shap)->y;
 	
-	if (dx <= 0 || dx >= ((line*)shape)->dx)
-		return TRANSPARENT_COLOR;
-		
-	if ((dy < 0 || dy > ((line*)shape)->dy) && ((line*)shape)->dy >= 0)
-		return TRANSPARENT_COLOR;
-
-	if ((dy > 0 || dy < ((line*)shape)->dy) && ((line*)shape)->dy < 0)
-		return TRANSPARENT_COLOR;
-
-	double k = (double)(((line*)shape)->dy/((line*)shape)->dx);
-
-	if (dy == k * dx)
-		return ((line*)shape)->color;
-
-
-	return TRANSPARENT_COLOR;
-}
-
-unsigned char calc_rect(unsigned int x, unsigned int y, shape* shape)
-{
-	unsigned char color = TRANSPARENT_COLOR;
-    int dx = x - ((line*)shape)->x;
-	int dy = y - ((line*)shape)->y;
+	if ((dx < ((splinex*)shap)->dx1 || dx > ((splinex*)shap)->dx2))
+	return transparent;
 	
-	if (dx >= 0 &&
-		dx <= ((rect*)shape)->dx &&
-		dy >= 0 &&
-		dy <= ((rect*)shape)->dy)
-	{
-		color = ((rect*)shape)->fillcolor;
-
-		if (dy == 0 || dy == ((rect*)shape)->dy)
-			color = ((rect*)shape)->color;
-
-		if (dx == 0 || dx == ((rect*)shape)->dx)
-			color = ((rect*)shape)->color;
-	}
-		
-	return color;
-}
-
-unsigned char calc_circle(unsigned int x, unsigned int y, shape* shape)
-{
-	unsigned char color = TRANSPARENT_COLOR;
-	
-	if (x >= ((circle*)shape)->x - ((circle*)shape)->r &&
-	    x <= ((circle*)shape)->x + ((circle*)shape)->r &&
-		y >= ((circle*)shape)->y - ((circle*)shape)->r &&
-		y <= ((circle*)shape)->y + ((circle*)shape)->r)
-	{
-		int dx = ((circle*)shape)->x - x;
-		int dy = ((circle*)shape)->y - y;
-		unsigned int r = sqrt(dx * dx +  dy * dy);
-		if (r <= ((circle*)shape)->r)
-			color = (((circle*)shape)->fillcolor);
-		if (r == ((circle*)shape)->r)
-			color = (((circle*)shape)->color);
-	}
-		
-	return color;
-}
-
-unsigned char calc_splinex(unsigned int x, unsigned int y, shape* shape)
-{
-	unsigned char color = TRANSPARENT_COLOR;
-	int dx = x - ((splinex*)shape)->x;
-	int dy = y - ((splinex*)shape)->y;
-	
-	if ((dx < ((splinex*)shape)->dx1 || dx > ((splinex*)shape)->dx2))
-		return TRANSPARENT_COLOR;
-	
-	int dytemp = (int)(((splinex*)shape)->k1 * dx * dx + ((splinex*)shape)->k2 * dx);
+	point_t dytemp = (point_t)(((splinex*)shap)->k1 * dx * dx + ((splinex*)shap)->k2 * dx);
 	
 	if (dy == dytemp || dy + 1 == dytemp)
-		color = ((splinex*)shape)->color;
+	color = ((splinex*)shap)->color;
 
 	return color;
 }
 
-unsigned char calc_spliney(unsigned int x, unsigned int y, shape* shape)
+
+color_t calc_spliney(upoint_t x, upoint_t y, shape* shap, color_t transparent)
 {
-	unsigned char color = TRANSPARENT_COLOR;
-	int dx = x - ((spliney*)shape)->x;
-	int dy = y - ((spliney*)shape)->y;
+	color_t color = transparent;
+	point_t dx = x - ((spliney*)shap)->x;
+	point_t dy = y - ((spliney*)shap)->y;
 	
-	if ((dy < ((spliney*)shape)->dy1 || dy > ((spliney*)shape)->dy2))
-		return TRANSPARENT_COLOR;
+	if ((dy < ((spliney*)shap)->dy1 || dy > ((spliney*)shap)->dy2))
+	return transparent;
 	
-	int dxtemp = (int)(((spliney*)shape)->k1 * dy * dy + ((spliney*)shape)->k2 * dy);
+	point_t dxtemp = (point_t)(((spliney*)shap)->k1 * dy * dy + ((spliney*)shap)->k2 * dy);
 	
 	if (dx == dxtemp || dx + 1 == dxtemp)
-	color = ((spliney*)shape)->color;
+	color = ((spliney*)shap)->color;
 
 	return color;
 }
 
 
-unsigned char point_color(unsigned int x, unsigned int y, shape** shapes, unsigned char shapes_count)
+color_t draw_shapes(upoint_t x, upoint_t y, shape** shapes, unsigned int shapes_count, color_t transparent)
 {
-	unsigned char color = TRANSPARENT_COLOR;
-	unsigned char pcolor = BACKGROUND_COLOR;
+	color_t color = transparent;
 	
-	for (unsigned char j = 0; j < shapes_count; j++)
+	for (unsigned int j = 0; j < shapes_count; j++)
 	{
-		color = TRANSPARENT_COLOR;
 		if (shapes[j] == 0) continue;
 		switch(shapes[j]->flags & SHAPE_MASK)
 			{
 			case DOT:
-				color = calc_dot(x, y, shapes[j]);
+				color = calc_dot(x, y, shapes[j], color);
 				break;
 			case LINE:
-				color = calc_line(x, y, shapes[j]);
+				color = calc_line(x, y, shapes[j], color);
 				break;
-			case RECTANGLE:
-				color = calc_rect(x, y, shapes[j]);
+			case TRIANGLE:
+				color = calc_triangle(x, y, shapes[j], color);
+				break;
+			case SQUARE:
+				color = calc_square(x, y, shapes[j], color);
 				break;
 			case CIRCLE:
-				color = calc_circle(x, y, shapes[j]);
+				color = calc_circle(x, y, shapes[j], color);
 				break;
 			case SPLINEX:
-				color = calc_splinex(x, y, shapes[j]);
+				color = calc_splinex(x, y, shapes[j], color);
 				break;
 			case SPLINEY:
-				color = calc_spliney(x, y, shapes[j]);
+				color = calc_spliney(x, y, shapes[j], color);
 				break;
 			default:
-				color = TRANSPARENT_COLOR;
+				color = transparent;
 				break;
 		}
-		pcolor = (color != TRANSPARENT_COLOR)? color : pcolor;
 	}
 	
-	return pcolor;
+	return color;
 }

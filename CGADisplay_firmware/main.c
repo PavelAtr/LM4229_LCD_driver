@@ -18,17 +18,17 @@ void text(void)
 
 void draw(shape** shapes, unsigned char shapes_count)
 {
-	unsigned int scene_x1 = 20;
-	unsigned int scene_x2 = 100;
-	unsigned int scene_y1 = 40;
-	unsigned int scene_y2 = 100;
+	upoint_t scene_x1 = 5;
+	upoint_t scene_x2 = 200;
+	upoint_t scene_y1 = 5;
+	upoint_t scene_y2 = 180;
 
 	dpy_set_address_pointer(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
-	for (unsigned int y = 0; y < DISPLAY_HEIGHT; y++)
-		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
+	for (upoint_t y = 0; y < DISPLAY_HEIGHT; y++)
+		for (upoint_t x = 0; x < DISPLAY_WIDTH; x++)
 		{
 			if (x >= scene_x1 && x <= scene_x2 && y >= scene_y1 && y <= scene_y2)
-				PORTD = dpy_point(point_color(x, y, shapes, shapes_count));
+				PORTD = dpy_point(draw_shapes(x, y, shapes, shapes_count, COLOR_WHITE));
 			else
 				PORTD = dpy_point(DISPLAY_WHITE);	
 		}
@@ -37,7 +37,7 @@ void draw(shape** shapes, unsigned char shapes_count)
 
 
 shape* shapes[10];
-rect rect1;
+squar squar1;
 circle circle1;
 line line1;
 line line2;
@@ -45,6 +45,7 @@ line line3;
 dot dot1;
 splinex spline1;
 spliney spline2;
+triangle triangle1;
 
 
 int main(void)
@@ -59,20 +60,19 @@ int main(void)
 	dpy_set_graphic_home(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
 	dpy_set_text_home(TEXT_AREA >> 8, TEXT_AREA & 0x00FF);
 	
-	shapes[0] = (shape*)set_rect(20, 40, 60, 60, BLACK, BLACK, &rect1);
-	shapes[1] = (shape*)set_circle(50, 70, 30, WHITE, WHITE, &circle1);
-	shapes[2] = (shape*)set_line(20, 70, 30, 30, BLACK, &line1);
-	shapes[3] = (shape*)set_line(50, 100, 30, -30, BLACK, &line2);
-	shapes[4] = (shape*)set_line(20, 70, 60, 0, BLACK, &line3);
-	shapes[5] = (shape*)set_dot(50, 80, BLACK, &dot1);
-	shapes[6] = (shape*)set_splinex(70, 85, -20, 0, -0.1, -0.05, BLACK, &spline1);
-	shapes[7] = (shape*)set_spliney(70, 85, -20, 0, -0.1, -0.05, BLACK, &spline2);
+	shapes[0] = (shape*)set_square(20, 10, 60, 10, 70, 100, 10, 100, COLOR_BLACK, COLOR_BLACK, &squar1);//	shapes[1] = (shape*)set_circle(50, 70, 30, WHITE, WHITE, &circle1);
+	shapes[1] = (shape*)set_triangle(40, 10, 70, 100, 10, 100, COLOR_WHITE, COLOR_TRANSPARENT, &triangle1);
+	shapes[2] = (shape*)set_dot(50, 80, COLOR_BLACK, &dot1);
+	shapes[3] = (shape*)set_splinex(70, 85, -20, 20, -0.1, -0.05, COLOR_WHITE, &spline1);
+	shapes[4] = (shape*)set_spliney(70, 85, -20, 20, -0.1, -0.05, COLOR_WHITE, &spline2);
+	shapes[5] = (shape*)set_circle(70, 85, 20, COLOR_WHITE, COLOR_TRANSPARENT, &circle1);
+
 	
     while (1)
     {
 		dpy_clear();
 		text();		
-		draw(shapes, 8);
+		draw(shapes, 6);
     }
 }
 
