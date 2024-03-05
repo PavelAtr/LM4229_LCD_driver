@@ -108,8 +108,10 @@ unsigned char dpy_set_mode(unsigned char mode)
 	return dpy_send_cmd(mode);
 }
 
-unsigned char dpy_set_graphic_home(unsigned char high, unsigned char low)
+unsigned char dpy_set_graphic_home(unsigned int address)
 {
+	unsigned char high = address >> 8;
+	unsigned char low  = address & 0x00FF;
 	unsigned char ret = dpy_send_param(low);
 	ret |= dpy_send_param(high);
 	ret |= dpy_send_cmd(SET_GRAPHIC_HOME);
@@ -123,8 +125,10 @@ unsigned char dpy_set_graphic_area(unsigned char columns)
 	return ret;
 }
 
-unsigned char dpy_set_text_home(unsigned char high, unsigned char low)
+unsigned char dpy_set_text_home(unsigned int address)
 {
+	unsigned char high = address >> 8;
+	unsigned char low  = address & 0x00FF;
 	unsigned char ret = dpy_send_param(low);
 	ret |= dpy_send_param(high);
 	ret |= dpy_send_cmd(SET_TEXT_HOME);
@@ -138,51 +142,77 @@ unsigned char dpy_set_text_area(unsigned char columns)
 	return ret;
 }
 
-unsigned char dpy_set_address_pointer(unsigned char high, unsigned char low)
+unsigned char dpy_set_address_pointer(unsigned int address)
 {
+	unsigned char high = address >> 8;
+	unsigned char low  = address & 0x00FF;
 	unsigned char ret = dpy_send_param(low);
 	ret |= dpy_send_param(high);
 	ret |= dpy_send_cmd(SET_ADDRESS_POINTER);
 	return ret;
 }
 
-unsigned char dpy_set_cursor_pointer(unsigned char high, unsigned char low)
+unsigned char dpy_set_cursor_pointer(unsigned int address)
 {
+	unsigned char high = address >> 8;
+	unsigned char low  = address & 0x00FF;
 	unsigned char ret = dpy_send_param(low);
 	ret |= dpy_send_param(high);
 	ret |= dpy_send_cmd(SET_CURSOR_POINTER);
 	return ret;
 }
 
-unsigned char dpy_data_write(unsigned char data)
+unsigned int cached_address = 0;
+
+void dpy_set_cached_address(unsigned int address)
 {
+	if (address != cached_address)
+		dpy_set_address_pointer(address);
+}
+
+unsigned char dpy_data_write(unsigned int address, unsigned char data)
+{
+	dpy_set_cached_address(address);
+	dpy_data_write_mode();
 	unsigned char ret = dpy_send_param(data);
 	ret |= dpy_send_cmd(DATA_WRITE);
+	return dpy_status_read();
+}
+
+unsigned char dpy_data_read(unsigned int address)
+{
+	dpy_set_cached_address(address);
+	dpy_send_cmd(DATA_READ);
+	dpy_data_read_mode();
+	PORTCMD &= ~CE;
+	_delay_us(HARDWARE_DELAY);
+	PORTCMD |= CE;
+	unsigned char ret = PINDATA;
 	return ret;
 }
 
-unsigned char row = 0;
-unsigned char cell = 0;
+unsigned char dpy_cell;
 
-unsigned char dpy_point(unsigned char color)
+void dpy_point(unsigned int x, unsigned int y, unsigned char color, unsigned char send)
 {
-	unsigned char ret = 0;
-	row |= color & (0b10000000>>cell);
-	if (cell == 7) ret = dpy_data_write(row);
-	cell ++;
-	if (cell == 8)
-	{
-		row = 0;
-		cell = 0;
-	}
 	
-	return ret;
+	unsigned int pointnum = (x + y * DISPLAY_WIDTH);
+	unsigned int pos = pointnum / 8;
+	unsigned char bitnum = pointnum % 8;
+	if (bitnum == 0) dpy_cell = 0;
+	if (color == DISPLAY_BLACK) dpy_cell |= (0b010000000 >> bitnum);
+	else dpy_cell &= ~(0b010000000 >> bitnum);
+	if (bitnum == 7 || send)
+		dpy_data_write(GRAPHIC_AREA + pos, dpy_cell);
 }
 
-void dpy_clear()
+void dpy_clear(unsigned char color)
 {
-	dpy_set_address_pointer(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
+	unsigned int pos = 0;
 	for (unsigned int y = 0; y < DISPLAY_HEIGHT; y++)
-		for (unsigned int x = 0; x < DISPLAY_WIDTH; x++)
-			dpy_point(DISPLAY_BACKGROUND);
+		for (unsigned int x = 0; x < DISPLAY_WIDTH / 8; x++)
+		{
+			dpy_data_write(GRAPHIC_AREA + pos, color);
+			pos++;
+		}
 }

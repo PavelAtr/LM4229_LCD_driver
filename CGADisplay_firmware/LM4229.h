@@ -21,13 +21,12 @@
 #define DDRCMD DDRC
 
 #define DISPLAY_WIDTH 320
-#define DISPLAY_HEIGHT 128
-#define DISPLAY_COLS 30
+#define DISPLAY_HEIGHT 192
+#define DISPLAY_COLS 40
 #define DISPLAY_ROWS 24
 
 #define DISPLAY_BLACK 0xFF
 #define DISPLAY_WHITE 0x00
-#define DISPLAY_BACKGROUND DISPLAY_WHITE
 
 #define HARDWARE_DELAY 10
 
@@ -71,7 +70,8 @@
 #define SET_TEXT_HOME 0b01000000
 #define SET_GRAPHIC_AREA 0b01000011
 #define SET_TEXT_AREA 0b01000001
-#define DATA_WRITE 0b11000000
+#define DATA_WRITE 0b11000100
+#define DATA_READ 0b11000101
 #define SET_CURSOR_POINTER 0b00100001
 #define SET_OFFSET_REGISTER 0b00100010
 #define SET_ADDRESS_POINTER 0b00100100
@@ -79,16 +79,20 @@
 void dpy_init(void);
 unsigned char dpy_status_read(void);
 unsigned char dpy_send_cmd(unsigned char cmd);
-unsigned char dpy_send_param(unsigned char cmd);
+unsigned char dpy_send_data(unsigned char cmd);
 unsigned char dpy_set_mode(unsigned char mode);
-unsigned char dpy_set_graphic_home(unsigned char high, unsigned char low);
+unsigned char dpy_set_graphic_home(unsigned int address);
+unsigned char dpy_set_text_home(unsigned int address);
 unsigned char dpy_set_graphic_area(unsigned char columns);
-unsigned char dpy_set_text_home(unsigned char high, unsigned char low);
+unsigned char dpy_set_cursor_pointer(unsigned int address);
 unsigned char dpy_set_text_area(unsigned char columns);
-unsigned char dpy_set_address_pointer(unsigned char high, unsigned char low);
-unsigned char dpy_set_cursor_pointer(unsigned char high, unsigned char low);
-unsigned char dpy_data_write(unsigned char data);
-unsigned char dpy_point(unsigned char color);
-void dpy_clear();
+unsigned char dpy_set_address_pointer(unsigned int address);
+void dpy_set_cached_address(unsigned int address);
+unsigned char dpy_data_write(unsigned int address, unsigned char data);
+unsigned char dpy_data_read(unsigned int address);
+extern unsigned char dpy_cell;
+void dpy_point(unsigned int x, unsigned int y, unsigned char color, unsigned char send);
+void dpy_clear(unsigned char color);
 
 #endif
+
