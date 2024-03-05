@@ -71,23 +71,6 @@ line* set_line(upoint_t x1, upoint_t y1, upoint_t x2, upoint_t y2, char color, l
 	return shap;
 }
 
-color_t calc_line(upoint_t x, upoint_t y, shape* shap, color_t transparent)
-{
-	point_t dx = x - ((line*)shap)->x;
-	point_t dy = y - ((line*)shap)->y;
-
-	if (((line*)shap)->dy == 0)
-	{
-		if (gorizontal_line(dx, dy, shap) == CONTUR)
-			return ((line*)shap)->color;
-	}
-	else
-		if (vertical_line(dx, dy, shap) == CONTUR)
-			return ((line*)shap)->color;
-
-	return transparent;
-}
-
 short calc_line_raw(upoint_t x, upoint_t y, shape* shap)
 {
 	point_t dx = x - ((line*)shap)->x;
@@ -98,6 +81,15 @@ short calc_line_raw(upoint_t x, upoint_t y, shape* shap)
 	else
 		return vertical_line(dx, dy, shap);
 }
+
+color_t calc_line(upoint_t x, upoint_t y, shape* shap, color_t transparent)
+{
+	if (calc_line_raw(x, y, shap) == CONTUR)
+		return ((line*)shap)->color;
+
+	return transparent;
+}
+
 
 triangle* set_triangle(upoint_t x1, upoint_t y1, upoint_t x2, upoint_t y2, upoint_t x3, upoint_t y3, color_t color, color_t fillcolor, triangle* shap)
 {
