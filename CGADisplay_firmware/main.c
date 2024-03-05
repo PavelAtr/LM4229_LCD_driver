@@ -18,19 +18,15 @@ void text(void)
 
 void draw(shape** shapes, unsigned char shapes_count)
 {
-	upoint_t scene_x1 = 5;
-	upoint_t scene_x2 = 200;
-	upoint_t scene_y1 = 5;
-	upoint_t scene_y2 = 180;
-
 	dpy_set_address_pointer(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
 	for (upoint_t y = 0; y < DISPLAY_HEIGHT; y++)
 		for (upoint_t x = 0; x < DISPLAY_WIDTH; x++)
 		{
-			if (x >= scene_x1 && x <= scene_x2 && y >= scene_y1 && y <= scene_y2)
-				PORTD = dpy_point(draw_shapes(x, y, shapes, shapes_count, COLOR_WHITE));
+			color_t color = draw_shapes(x, y, shapes, shapes_count, COLOR_WHITE);
+			if (color == COLOR_BLACK)
+				dpy_point(DISPLAY_BLACK);
 			else
-				PORTD = dpy_point(DISPLAY_WHITE);	
+				dpy_point(DISPLAY_WHITE);
 		}
 }
 
@@ -39,9 +35,6 @@ void draw(shape** shapes, unsigned char shapes_count)
 shape* shapes[10];
 squar squar1;
 circle circle1;
-line line1;
-line line2;
-line line3;
 dot dot1;
 splinex spline1;
 spliney spline2;
@@ -60,9 +53,9 @@ int main(void)
 	dpy_set_graphic_home(GRAPHIC_AREA >> 8, GRAPHIC_AREA & 0x00FF);
 	dpy_set_text_home(TEXT_AREA >> 8, TEXT_AREA & 0x00FF);
 	
-	shapes[0] = (shape*)set_square(20, 10, 60, 10, 70, 100, 10, 100, COLOR_BLACK, COLOR_BLACK, &squar1);//	shapes[1] = (shape*)set_circle(50, 70, 30, WHITE, WHITE, &circle1);
-	shapes[1] = (shape*)set_triangle(40, 10, 70, 100, 10, 100, COLOR_WHITE, COLOR_TRANSPARENT, &triangle1);
-	shapes[2] = (shape*)set_dot(50, 80, COLOR_BLACK, &dot1);
+	shapes[0] = (shape*)set_square(20, 10, 60, 10, 70, 100, 10, 100, COLOR_BLACK, COLOR_WHITE, &squar1);//	shapes[1] = (shape*)set_circle(50, 70, 30, WHITE, WHITE, &circle1);
+	shapes[1] = (shape*)set_triangle(40, 10, 70, 100, 10, 100, COLOR_WHITE, COLOR_BLACK, &triangle1);
+	shapes[2] = (shape*)set_dot(40, 50, COLOR_WHITE, &dot1);
 	shapes[3] = (shape*)set_splinex(70, 85, -20, 20, -0.1, -0.05, COLOR_WHITE, &spline1);
 	shapes[4] = (shape*)set_spliney(70, 85, -20, 20, -0.1, -0.05, COLOR_WHITE, &spline2);
 	shapes[5] = (shape*)set_circle(70, 85, 20, COLOR_WHITE, COLOR_TRANSPARENT, &circle1);
